@@ -16809,11 +16809,12 @@ if test "${with_pcsc_libs+set}" = set; then :
   withval=$with_pcsc_libs; pcsc_search_lib_dirs="$withval"
 else
   pcsc_search_lib_dirs="/usr/lib64 \
-                          /usr/lib \
-            	          /usr/local/lib \
-                          /usr/lib/pcsc/lib \
-	                  /usr/local/pcsc/lib \
-	                  /lib"
+                        /usr/lib \
+                        /usr/local/lib \
+                        /usr/lib/pcsc/lib \
+                        /usr/local/pcsc/lib \
+                        /usr/lib/x86_64-linux-gnu \
+                        /lib"
 fi
 
         for d in $pcsc_search_lib_dirs; do
