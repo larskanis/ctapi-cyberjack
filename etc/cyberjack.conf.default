@@ -1,0 +1,59 @@
+#
+# This file modifies the behaviour of the Cyberjack driver.
+# Please copy this file to the same folder but under the name "cyberjack.conf"
+# (i.e. without the trailing ".default").
+#
+
+#
+# Possible values are:
+#  0x00001 Generic debug logging
+#  0x00002 Reader debug logging
+#  0x00004 CTAPI debug logging
+#  0x00008 AUSB debug logging
+#  0x00010 CJPPA debug logging
+#  0x00020 ECOM debug logging
+#  0x00040 transfer debug logging
+#  0x00080 USB debug logging
+#  0x00100 IFD debug logging
+
+#  0x10000 don't beep
+#  0x20000 use the kernel module for old Cyberjacks/Ecoms
+#  0x40000 enable the INPUT command (->security risk!)
+#  0x80000 don't use X11 for beeping (always use console)
+#
+# These values can be OR combined to form the resulting value.
+#
+
+
+# When using Moneyplex with Kernel 2.6.13 or before (e.g. SuSE10.0) on a
+# 64 bit system you must use the kernel module for the cyberjack/ecom:
+#
+#  flags=0x20000
+# 
+# Debug logging can be enabled on such a system with the following setting:
+#
+#  flags=0x2ffff
+#
+
+flags=0
+
+#
+# Path and name of the default logfile (defaults to /tmp/cj.log)
+#
+debugFile=/tmp/cj.log
+
+#
+# This file is used to store the serial numbers of the connected devices
+# It can be used to assign a reader to a particular port number, regardless
+# of the USB port the reader actually is connected to.
+# If you call CT_init() with port 0x9000 then the first serial number is read 
+# from this file and the USB bus is scanned for a reader with this particular 
+# serial number.
+# Port 0x9001 indicates the seconds serial number and so forth.
+#
+# Normally this setting is left blank which makes the driver read and write
+# the file from/to the home directory of the calling user (the filename is
+# then $HOME/cyberjack_serials).
+#
+#serialFile=/etc/cyberjack_serials
+

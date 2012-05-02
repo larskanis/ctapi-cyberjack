@@ -1,0 +1,38 @@
+.TH cjflash 8 "20 April 2010"
+.IX cjflash
+
+.SH NAME
+cjflash -- update your readers firmware
+
+.SH SYNOPSIS
+cjflash \fIREADERNR IMAGEFILE SIGNATUREFILE [KEYFILE]\fR
+
+.SH DESCRIPTION
+Using \fBcjflash\fR you can update the firmware of your CyberJack card reader.
+It will only work for the recent models (0x400) and versions from 3.0.6 up.
+
+Normally, you will simply use it with the command line e.g.
+"cjflash 1 Kernel_V30_07.bin Kernel_V30_07.bin.ecoma.sgn",
+then confirm the new firmware on your reader by pressing its "OK" button,
+and that's it. If the update process hangs after that, you will need to
+disconnect and reconnect the reader, and issue a slightly different
+command line:
+"CJ_USB_MODE=1 cjflash 1 Kernel_V30_07.bin Kernel_V30_07.bin.ecoma.sgn" -
+which will tell the driver your reader is having problems with Linux, and should
+be handled differently. Use the CJ_USB_MODE setting only in the described case!
+
+.SH OPTIONS
+.IP "\fBREADERNR\fR"
+This is the number of your card reader, starting from 1 - so 1 corresponds to the
+first card reader attached to your system, 2 to the second, a.s.o.
+
+.IP "\fBIMAGEFILE\fR"
+This is the binary firmware image file to load onto your card reader.
+
+.IP "\fBSIGNATUREFILE\fR"
+The file containing the signature for the imagefile
+
+.IP "\fBKEYFILE\fR"
+
+.SH EXAMPLE
+cjflash 1 Kernel_V30_07.bin Kernel_V30_07.bin.ecoma.sgn

@@ -1,0 +1,174 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* if DLL is to be built */
+#undef BUILDING_DLL
+
+/* build */
+#undef CYBERJACK_VERSION_BUILD
+
+/* full version string */
+#undef CYBERJACK_VERSION_FULL_STRING
+
+/* major version */
+#undef CYBERJACK_VERSION_MAJOR
+
+/* minor version */
+#undef CYBERJACK_VERSION_MINOR
+
+/* patchlevel */
+#undef CYBERJACK_VERSION_PATCHLEVEL
+
+/* version string */
+#undef CYBERJACK_VERSION_STRING
+
+/* tag */
+#undef CYBERJACK_VERSION_TAG
+
+/* Define if you want debugging code enabled. */
+#undef DEBUG
+
+/* whether non-serial interfaces should be enabled */
+#undef ENABLE_NONSERIAL
+
+/* visibility */
+#undef GCC_WITH_VISIBILITY_ATTRIBUTE
+
+/* whether function dlopen is available */
+#undef HAS_DLOPEN
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* whether FOX is available */
+#undef HAVE_FOX
+
+/* if HAL is available */
+#undef HAVE_HAL
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* whether XML2 is available */
+#undef HAVE_LIBXML2
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* if PC/SC is available */
+#undef HAVE_PCSC
+
+/* Define if you have POSIX threads libraries and header files. */
+#undef HAVE_PTHREAD
+
+/* Define to 1 if you have the <pthread.h> header file. */
+#undef HAVE_PTHREAD_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
+/* if BeOS is used */
+#undef OS_BEOS
+
+/* if Apple Darwin is used */
+#undef OS_DARWIN
+
+/* if FreeBSD is used */
+#undef OS_FREEBSD
+
+/* if linux is used */
+#undef OS_LINUX
+
+/* target system */
+#undef OS_NAME
+
+/* if NetBSD is used */
+#undef OS_NETBSD
+
+/* if OpenBSD is used */
+#undef OS_OPENBSD
+
+/* if PalmOS is used */
+#undef OS_PALMOS
+
+/* if this is a POSIX system */
+#undef OS_POSIX
+
+/* target system */
+#undef OS_SHORTNAME
+
+/* if Solaris is used */
+#undef OS_SOLARIS
+
+/* system type */
+#undef OS_TYPE
+
+/* if WIN32 is used */
+#undef OS_WIN32
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to necessary symbol if this constant uses a non-standard name on
+   your system. */
+#undef PTHREAD_CREATE_JOINABLE
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* needed for SuSE */
+#undef USE_SUSE_HACK
+
+/* whether pthreads are to be used */
+#undef USE_THREADS
+
+/* if libUSB-1.0 is available */
+#undef USE_USB1
+
+/* Version number of package */
+#undef VERSION
+
+/* whether DL library is available */
+#undef WITH_DLLIB
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const

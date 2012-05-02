@@ -1,0 +1,215 @@
+
+===========================================================================
+                  ctapi-cyberjack-3.3.0 (2008/07/23)
+===========================================================================
+
+This release improves support for rdesktop, fixes some PC/SC-related bugs,
+implemente FEATURE_MCT_READER_DIRECT and adds support for latest versions 
+of pcsclite which rely on libHAL.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.3.0beta4 (2008/07/03)
+===========================================================================
+
+This release fixes problems with PC/SC part10 verify/modify pin and 
+improves support for rdesktop.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.3.0beta3 (2008/06/11)
+===========================================================================
+
+This release fixes a problem in implementation of 
+FEATURE_MCT_READER_DIRECT.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.3.0beta2 (2008/06/07)
+===========================================================================
+
+This release adds support for the latest version of pcsclite. For this to
+work this driver now depends on libhal. However, if libHAL isn't present
+then support for it will not be compiled.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.3.0beta1 (2008/06/02)
+===========================================================================
+
+This release adds support for the PC/SC part10 feature MCT_READERDIRECT.
+It also fixes a problem with PC/SC part10 VERIFY_DIRECT. This driver now
+recognizes older Ecom's with new firmware (product id 0x401).
+
+
+===========================================================================
+                  ctapi-cyberjack-3.2.0 (2008/04/03)
+===========================================================================
+
+This release fixes some bugs and adds workarounds for ancient cyberJack
+readers (0x100). The documentation in LIESMICH.xml has been updated.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.2.0beta2 (2008/02/12)
+===========================================================================
+
+This release tries to fix the problems reported by some users regarding
+the old cyberJack pinpad/ecom (0x100).
+
+
+===========================================================================
+                  ctapi-cyberjack-3.2.0beta1 (2008/02/08)
+===========================================================================
+
+This release needs libsysfs to scan for devices. It also allows for the
+kernel module to be used to drive older Cyberjack Ecom/Pinpad.
+The tool "cyberjack" now has two commands to easily set and clear flags
+in the configuration file.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.1.0 (2008/01/10)
+===========================================================================
+
+This is the next stable release of this driver. It introduces a new method
+of selecting devices by serial number and supports Cyberjacks connected
+via serial ports (COMx). It is because of these features that the minor
+version has been incremented (->3.0.x to 3.1.0).
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.6rc4 (2007/12/12)
+===========================================================================
+
+This release fixes some bugs.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.6rc3 (2007/12/12)
+===========================================================================
+
+This release adds support for Cyberjack Ecom A connected via serial cable.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.6rc2 (2007/12/03)
+===========================================================================
+
+This release fixes a problem with the APDU 20,10 and Ecom(a).
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.6rc1 (2007/11/19)
+===========================================================================
+
+This release adds special handling for port values 0x9000 and above. Those
+values are used to assign fixed port values to particular readers by using
+the serial number available with Cyberjack readers with productId >=0x300.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.6beta1 (2007/11/16)
+===========================================================================
+
+This release in combination with the latest firmware should fix the problems 
+reported with Ubuntu 7.xx and the Cyberjack Ecom (a).
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.5 (2007/10/20)
+===========================================================================
+
+Stable release.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.5rc1 (2007/10/18)
+===========================================================================
+
+This release fixes a bug which makes Moneyplex unable to read cards with
+new ecoms (introduced by 3.0.5beta5). This version is considered a release
+candidate.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.5beta5 (2007/10/08)
+===========================================================================
+
+This release enables reading of German medical cards with 0x400 devices.
+Logfiles are now truncated to 10MB.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.5beta1 (2007/09/19)
+===========================================================================
+
+This release introduces a workaround for hanging USB hardware.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.4 (2007/09/16)
+===========================================================================
+
+This release fixes a bug in the USB logging code. The diagnosis tool
+cyberjack now shows some firmware information.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.4beta1 (2007/08/16)
+===========================================================================
+
+This release fixes bug which can cause the driver to crash.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.3 (2007/07/20)
+===========================================================================
+
+This release fixes problems of old Ecom readers with APDUs and their response
+when exceeding 262 bytes. It also enables logging at USB level.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.2 (2007/07/16)
+===========================================================================
+
+This release removes some memory leaks found by valgrind. It also fixes 
+the problem of the reader sometimes being unresponsive (i.e. sometimes it
+just hung up when trying to open it for the second time with CT_open()).
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.1 (2007/07/10)
+===========================================================================
+
+This is a hotfix for the USB suspend problem with Kernel 2.6.20:
+It seems like libusb does not detect the cyberjack 0x400 correctly when
+the reader is suspended (e.g. libusb only detects the reader when it
+currently is not suspended, but the reader needs some time to become
+active after resuming and Libusb does not wait for this time...
+Now we just try for about 5 secs to enumerate the USB devices via libusb
+which keeps the reader active until it has completed its initialization).
+This fix is only needed as long as Libusb has these problems, maybe they
+will fix this...
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.0 (2007/06/21)
+===========================================================================
+
+This is the first non-beta release of the next generation Cyberjack driver.
+It contains a small diagnosis tool (called cyberjack) which tries to detect
+the most common configuration problems and gives some hints on how to
+overcome them.
+
+
+===========================================================================
+                  ctapi-cyberjack-3.0.0beta1 (2007/05/08)
+===========================================================================
+
+This is the first beta release of 3.0.0. It supports all curently known
+Cyberjack USB readers (including the latest Ecom A).
+Beeping now works using XBell on X11 systems and the USB lowlevel interface
+has been partially rewritten.
+This version contains a flash tool for the latest Cyberjack Ecom A.

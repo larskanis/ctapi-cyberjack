@@ -1,0 +1,522 @@
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.3.0 (2008/07/23)
+===========================================================================
+
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.3.0beta4 (2008/07/03)
+===========================================================================
+
+
+2008/07/03: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- IFD: accept WIN32 code for GET_FEATURE (now works with rdesktop)
+- IFD: fixed a problem with VERIFY_PIN
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.3.0beta3 (2008/06/11)
+===========================================================================
+
+Fixed a problem in implementation of FEATURE_MCT_READER_DIRECT.
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.3.0beta2 (2008/06/07)
+===========================================================================
+
+
+2008/06/04: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- recent releases of pcsclite use libhal to detect readers. Therefore
+  they changed the default namespace for the reader names (from "libusb:"
+  to "libhal:") which also has a new syntax. Therefore we are forced to
+  support libhal as well.
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.3.0beta1 (2008/06/02)
+===========================================================================
+
+
+2008/05/31: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- implemented FEATURE_MCT_READERDIRECT
+
+
+2008/05/27: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed two typos in ifd/part10.c
+- added missing newline to ECFReader.h
+- copied Reader.h from svn/include to drivers include dir (we definately
+  should have the version within the driver be the only one!)
+- added BingoError.h from the include/firmware folder (sigh)
+- fixed a bug in ctapi.cpp (was using a false DEBUG_MASK for CTAPI)
+- improved error logging in ctapi.cpp
+- ifd/part10.c: Now check the endianess of ulDataLength in verify/modify pin
+  structures
+- added ID 0x401 to list of recognized USB readers in USBLinux.cpp
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.2.0 (2008/04/03)
+===========================================================================
+
+
+2008/04/03: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- pulled-in changes from the Windows driver
+
+
+2008/03/25: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed a bug in usbdev with old versions of sysfs (like on SuSE10.0)
+
+
+2008/02/12: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- LIESMICH.xml: added section about Moneyplex on 64-bit systems
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.2.0beta2 (2008/02/12)
+===========================================================================
+
+
+2008/02/12: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- cjIoOpen_libusb(): 
+  - only try to detach kernel driver if claim_interface() doesn't work
+  - don't set configuration (is done by the kernel anyway)
+  - call ausb_reset() like driver 2.0.14 did if the corresponding flag is
+    set in the configuration file
+  - added some more debug messages
+- LIESMICH.xml: added description of flag RESET_BEFORE
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.2.0beta1 (2008/02/08)
+===========================================================================
+
+
+
+2008/02/08: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- updated LIESMICH.xml: it now contains a section about the tool
+  "cyberjack", some other sections have been updated
+
+
+2008/02/06: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- ausb{1,3}.c: added timeout control to avoid infinite loops
+- ctapi.cpp: function _init_common1() now also checks for kernel mode
+  when device name is given (not only for port values). Now works with
+  libchipcard.
+
+
+2008/02/05: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- make libsysfs mandatory (we now depend on it)
+- added member "port" to struct rsct_usbdev_t
+- reenabled access via kernel module for 0x100 devices
+- enabled logging even when using kernel module for 0x100 devices
+- serial devices and /dev/ttyUSBx access is now availabe via
+  rsct_init_name()
+- renamed config_*() functions to rsct_config_*() and export those functions
+- tool cyberjack: 
+  - added commands:
+    - check: this is the default when missing, it performs the checks like
+             before
+    - addflags: adds flags in the configuration file
+    - delflags: clears flags in the configuration file
+    The latter two functions have been introduced to simplify setting/clearing
+    of flags (these commands always find the correct configuration file).
+  - don't bail out if the device file in /proc/bus/usb is not accessible
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.1.0 (2008/01/10)
+===========================================================================
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.6rc4 (2007/12/12)
+===========================================================================
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.6rc3 (2007/12/12)
+===========================================================================
+
+
+2007/12/12: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- ausb.c: changed ausb_init() to call usb_init() only once but
+  usb_find_busses() and usb_find_devices() at every call
+
+
+2007/12/10: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added support for readers connected via serial ports
+- added section about this new feature to LIESMICH.xml
+- fixed "cyberjack" tool module cm_reader (now creates a correct
+  xml file).
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.6rc2 (2007/12/03)
+===========================================================================
+
+
+2007/11/29: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed a bug in ecom_a code concerning APDU 20,10
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.6rc1 (2007/11/19)
+===========================================================================
+
+
+2007/11/17: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added code which enumerates readers using libsysfs
+- added special handling for CT_init() with port values of 0x9000: Now a
+  configuration file is used to assign fixed port numbers to readers using
+  their serial numbers.
+  However, this doesn't work with ancient Cyberjacks (e.g. product id 0x100).
+- added documentation about this new feature to LIESMICH.xml
+
+
+2007/11/16: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- hopefully fixed communication problems with 0x100 and 0x400
+- included a patch from Bernd Kupfer (adds ausb_reset_pipe())
+
+
+2007/11/13: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- removed call to ausb_reset() for 0x400 (this led to problems)
+
+
+2007/11/06: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed modifications to tool cjflash
+- no longer try to set configuration for 0x400 (we just use the only 
+  available configuration)
+- now also detach kernel module "cyberjack" from 0x400 when claiming the
+  interface fails (for some odd reasons at least my kernel loads that module
+  for the reader)
+
+
+2007/11/02: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added environment variable "CJ_SLEEP_MS2" which inserts a waiting
+  time (in milliseconds) directly after calling ausb_open()
+
+
+2007/10/30: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added environment variable "CJ_SLEEP_MS1" which inserts a waiting
+  time (in milliseconds) directly before calling ausb_open()
+
+
+2007/10/25: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- applied a patch provided by Daniel Golle which adapts our use of
+  variadic macros so that newer versions of GCC work, too
+- tried a new solution in fixing the problem with new kernels and old
+  readers
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.5rc1 (2007/10/18)
+===========================================================================
+
+
+2007/10/18: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed some warnings about missing parentheses and deprecated pragmas
+- CCIDReader.cpp: Fixed a bug in _CtData() about command 20/12 
+  (REQUEST_ICC). For this command actually Le may be omitted and still
+  means 0 (as opposed to "no data expected"). Without this fix Moneyplex
+  is unable to request a card.
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.5beta5 (2007/10/08)
+===========================================================================
+
+
+2007/10/05: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- changed some char* arguments to "const char*" because automatic conversion
+  from string constant to "const char*" is deprecated in recent versions of
+  gcc
+- copied eca_defines.h from other SVN folder to the driver where it is also 
+  needed (the driver tree should be self-sufficient)
+
+
+2007/10/01: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- log file is automatically truncated upon CT_init() if its size exceeds a 
+  given limit (currenty 10 MB)
+
+
+2007/09/21: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- tool cyberjack: added check for ancient kernels
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.5beta1 (2007/09/19)
+===========================================================================
+
+
+2007/09/19: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- call ausb_reset() prior to ausb_close() to workaround hanging reader
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.4 (2007/09/16)
+===========================================================================
+
+
+2007/09/16: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- cyberjack (diagnosis tool):
+  added a check for CT_data() which reads firmware information (makes it
+  easier for the Linux support)
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.4beta1 (2007/08/16)
+===========================================================================
+
+
+2007/08/16: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed a bug in Debug.cpp (was mangling with the stack given special 
+  circumstances)
+
+
+2007/07/27: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- removed debug-setting of debug level mask (was set to all-on)
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.3 (2007/07/20)
+===========================================================================
+
+
+2007/07/18: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed a bug regarding Ecom (0x100) readers
+
+
+2007/07/17: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- improved AUSB logging (should give more information): Now all drivers are
+  able to provide USB logging
+- more debugging of ecom code
+
+
+2007/07/16: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed a bug with APDU responses which exceed 262 bytes with old Ecom's
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.2 (2007/07/16)
+===========================================================================
+
+
+2007/07/16: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- some major memory checking with valgrind:
+  - fixed some possible memory leaks (e.g. by using correct delete 
+    notations, adding some delete's where missing etc)
+- CT_init() now internally reads vendor specific information (e.g.
+  firmware version etc) to make the log files more usefull
+- if "$SYSCONFDIR/cyberjack.conf" does not exist try to load
+  "$SYSCONFDIR/cyberjack.conf.default" which is installed by default
+  on any system (simplifies support)
+- Debian packages no longer remove the group "cyberjack"
+- "getenv()" in USBLinux.cpp has big issues with the driver: When it is
+  used the driver crashes, when commented-out the driver works. Since I
+  don't need it here anyway (since there are no Ecom(a) with firmware
+  prior to 3.0.6) I just commented it out completely
+
+
+2007/07/12: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- found correct place for call to usb_reset(), now opening and closing the
+  new Cyberjack many times in a row now works
+
+
+2007/07/11: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed return type in tool cjgeldkarte
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.1 (2007/07/10)
+===========================================================================
+
+
+2007/07/10: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- introduced a hotfix for the USB suspend problem with Kernel 2.6.20:
+  It seems like libusb does not detect the cyberjack 0x400 correctly when
+  the reader is suspended (e.g. libusb only detects the reader when it
+  currently is not suspended, but the reader needs some time to become
+  active after resuming and Libusb does not wait for this time...
+  Now we just try for about 5 secs to enumerate the USB devices via libusb
+  which keeps the reader active until it has completed its initialization).
+  This fix is only needed as long as Libusb has these problems, maybe they
+  will fix this...
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.0 (2007/06/22)
+===========================================================================
+
+
+2007/06/22: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- addes some necessary files for Debian
+- introduce check for SuSE10.x: Apparently those systems do not like the call
+  to "getenv()" we use in USBLinux.cpp. On all SuSE10 systems this makes
+  the driver crash. So for now this call is just disabled on affected systems.
+- fixed Info.plist
+
+
+2007/06/21: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- fixed usbdropdir for RPM packages
+- added diagnosis tool "cyberjack"
+- prepared release of version 3.0.0 (Linux)
+
+
+2007/06/06: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- changed Debug.cpp again: Really, we cannot include ctapi_config_l.h due to 
+  circular dependencies (the CTAPI stuff is a layer above the code in 
+  Debug.cpp). Since the MAC people seem to insist on including it anyway
+  (since they reverted my latest modification in that field) I wrapped an
+  #ifdef around that include
+
+
+2007/05/12: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- changed Debug.cpp: Cannot include ctapi_config_l.h due to circular
+  dependencies (the CTAPI stuff is a layer above the code in Debug.cpp,
+  so we can't use it here). It was used for setting the initial debug layer
+  anyway, and this can also be achieved by using the method 
+  CDebug::setLevelMask()
+- latest changes introduced SCARD_CTL_CODE which wasn't previously 
+  available to the Linux code (we don't include PC/SC stuff to stay independent
+  from it)
+- added definition for type SCARD_IO_REQUEST (same reason)
+- what the heck is this newly introduced "#pragma message"???
+
+
+===========================================================================
+MARK: released ctapi-cyberjack-3.0.0beta1 (2007/05/08)
+===========================================================================
+
+
+2007/05/07: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added driver for pinpad_a (heavily adapted it to enable it to work with
+  the new USB framework)
+- renamed files with suffix "2" back to names without this suffix since this
+  driver will succeed the old driver
+- use version from configure.ac instead of Windows code version (we still use
+  that in log messages)
+- adapted files for PC/SC to now additionally support older readers
+- set version to 3.0.0beta1 (for first beta release)
+- ausb_l.h: added missing include
+
+
+2007/05/04: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added envrionment variable "CJ_USB_MODE" which can be used with the
+  tool cjflash to force the USB implementation to be used (because they
+  differ very much and at least the flash tool needs to be able to work
+  with old firmware)
+- added section to README.xml and LIESMICH.xml about flashing the cyberjack
+  ecom_a
+- changed prototype for CTAPI key callback handler (now also has a  key value
+  as an argument)
+- added driver for old ECOM
+
+
+2007/05/02: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added IFD handler from old Cyberjack driver and adapted it to
+  this new driver
+- moved filenames in order to allow this driver to be installed in parallel
+  with the old driver (as long as the new driver doesn't support the older
+  readers)
+- added basic packaging files (RPM, DEB)
+- added documentation (basically copied over from old driver)
+- added tool cjgeldkarte2 (basically copied over from old driver)
+- prepared first beta release
+
+
+2007/04/30: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- halt interrupt pipe upon USBLinux::Open()
+- now always uses USB implementation 3 for 0x400er devices
+- fixed incompatibilities introduced by SVN merge
+
+
+2007/04/27: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- added tool for flashing the reader under Linux
+- added yet another approach to the USB interface
+- completed CTAPI driver for Linux
+- now only exports CTAPI functions and class CReader
+- modified ausb module: Now the Linux implementation
+  can choose between 3 different implementation. This is
+  needed to allow the flash tool to work with any firmware so
+  we can now flash any Ecom A regardless of the firmware
+  version
+- configure.ac: Now checks whether thread-support is requested,
+  only compile thread-related modules in case it is
+
+
+2007/04/26: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- improved logging for Linux (new log file format allows
+  for better filtering, so users may now send full logs
+  and I will still be able to filter out the important
+  parts)
+- implemented CTAPI driver
+- added a CTAPI test tool
+- tried a thread-based approach to the interrupt pipe problem
+- beeping now works with X11 also!
+
+
+2007/04/25: Martin Preuss<martin@libchipcard.de>
+------------------------------------------------
+- Debug.{h,cpp}: 
+  - implemented code for Linux
+  - added DEBUG_MASK_CTAPI
+  - added DEBUG_MASK_IFD
+  - added function rsct_debug_out() to allow for debugging
+    output from C (previously it only worked with C++)
+  - added method setLevelMask() to allow for runtime modification of
+    the level mask (on Linux)
+  - added method setLogFileName() to allow for runtime modification 
+    of the logfile (on Linux)
+  - fixed definition of DEBUG_MASK_IFD
+- only use #pragma(warning) on Windows (gets rid of warnings under Linux)
+- added ausb/ (lowlevel asynchronous communication via USB on Linux)
+- implemented USBLinux.cpp (now COM via USB works on Linux)
+- started working on CTAPI

@@ -1,0 +1,1468 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 6 November 2007), see www.w3.org">
+
+  <title>Treiber f&uuml;r REINER SCT cyberJack pinpad/e-com USB
+  Kartenleser</title>
+  <meta name="GENERATOR" content=
+  "Modular DocBook HTML Stylesheet Version 1.79">
+</head>
+
+<body class="article" bgcolor="#FFFFFF" text="#000000" link=
+"#0000FF" vlink="#840084" alink="#0000FF">
+  <div class="ARTICLE">
+    <div class="TITLEPAGE">
+      <h1 class="title"><a name="AEN2" id="AEN2">Treiber f&uuml;r
+      REINER SCT cyberJack pinpad/e-com USB Kartenleser</a></h1>
+
+      <div class="authorgroup">
+        <a name="AEN4" id="AEN4"></a>
+
+        <h3 class="author"><a name="AEN5" id="AEN5">Martin
+        Preuss</a></h3>
+      </div>
+
+      <p class="copyright">Copyright &copy; 2008 REINER SCT
+      GmbH</p>
+
+      <p class="pubdate">2008/02/12<br></p>
+
+      <div>
+        <div class="abstract">
+          <a name="AEN12" id="AEN12"></a>
+
+          <p>Dies ist das Handbuch zum Linux-Treiber f&uuml;r die
+          Reiner SCT cyberJack Kartenleser.</p>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="TOC">
+      <dl>
+        <dt><b>Table of Contents</b></dt>
+
+        <dt>1. <a href="#AEN14">&Uuml;bersicht</a></dt>
+
+        <dt>2. <a href="#AEN29">Von diesem Treiber
+        unterst&uuml;tzte Ger&auml;te</a></dt>
+
+        <dt>3. <a href="#AEN74">Distributions-spezifische
+        Hinweise</a></dt>
+
+        <dd>
+          <dl>
+            <dt>3.1. <a href="#AEN83">RPM-basiert</a></dt>
+
+            <dd>
+              <dl>
+                <dt>3.1.1. <a href="#AEN106">Einrichtung unter SuSE
+                Linux</a></dt>
+              </dl>
+            </dd>
+
+            <dt>3.2. <a href="#AEN113">DEB-basiert</a></dt>
+
+            <dt>3.3. <a href="#AEN129">Alle anderen
+            Distributionen</a></dt>
+          </dl>
+        </dd>
+
+        <dt>4. <a href="#AEN138">Firmware-Update</a></dt>
+
+        <dt>5. <a href="#AEN151">Support</a></dt>
+
+        <dt>6. <a href="#AEN171">Troubleshooting</a></dt>
+
+        <dd>
+          <dl>
+            <dt>6.1. <a href="#AEN173">Erste Schritte</a></dt>
+
+            <dt>6.2. <a href="#AEN180">Aeltere cyberJacks</a></dt>
+
+            <dt>6.3. <a href="#AEN187">Gro&szlig;e Anzahl von
+            Lesern</a></dt>
+
+            <dt>6.4. <a href="#AEN198">Hotplugging</a></dt>
+
+            <dt>6.5. <a href="#AEN204">Logging</a></dt>
+          </dl>
+        </dd>
+
+        <dt>7. <a href="#AEN209">Bekannte Probleme</a></dt>
+
+        <dt>8. <a href="#AEN214">Anwendungen</a></dt>
+
+        <dd>
+          <dl>
+            <dt>8.1. <a href="#AEN216">Moneyplex</a></dt>
+
+            <dd>
+              <dl>
+                <dt>8.1.1. <a href="#AEN222">Moneyplex auf
+                64-Bit-Systemen</a></dt>
+              </dl>
+            </dd>
+          </dl>
+        </dd>
+
+        <dt>9. <a href="#AEN227">Zus&auml;tzliche
+        Information</a></dt>
+
+        <dd>
+          <dl>
+            <dt>9.1. <a href="#AEN229">CT-API</a></dt>
+
+            <dt>9.2. <a href="#AEN234">PC/SC</a></dt>
+
+            <dd>
+              <dl>
+                <dt>9.2.1. <a href="#AEN237">Installation</a></dt>
+              </dl>
+            </dd>
+
+            <dt>9.3. <a href="#AEN243">Multithreading</a></dt>
+
+            <dt>9.4. <a href="#AEN247">Kommandola&auml;nge</a></dt>
+
+            <dt>9.5. <a href="#AEN250">Tastendruck
+            Callback</a></dt>
+
+            <dt>9.6. <a href="#AEN264">Informationen zur
+            Treiberversion</a></dt>
+
+            <dt>9.7. <a href="#AEN281">Zusaetzliche CT_init
+            Ersatz-Funktion</a></dt>
+
+            <dt>9.8. <a href="#AEN294">Feste Zurodnung der
+            Portnummer zu Lesern</a></dt>
+
+            <dt>9.9. <a href="#AEN308">Serielle Leser</a></dt>
+
+            <dt>9.10. <a href="#AEN318">Zurodnung alter Cyberjack
+            zu ttyUSB-Devices</a></dt>
+
+            <dt>9.11. <a href="#AEN329">Pin-Ueberpruefung mit der
+            PC/SC Funktion SCardControl</a></dt>
+          </dl>
+        </dd>
+
+        <dt>10. <a href="#AEN384">Mitgelieferte
+        Anwendungen</a></dt>
+
+        <dd>
+          <dl>
+            <dt>10.1. <a href="#AEN386">cyberjack</a></dt>
+
+            <dd>
+              <dl>
+                <dt>10.1.1. <a href="#AEN397">Kommandos
+                addflags/delflags</a></dt>
+
+                <dt>10.1.2. <a href="#AEN479">Kommando
+                check</a></dt>
+              </dl>
+            </dd>
+          </dl>
+        </dd>
+      </dl>
+    </div>
+
+    <div class="section">
+      <h2 class="section"><a name="AEN14" id="AEN14">1.
+      &Uuml;bersicht</a></h2>
+
+      <p>Dieser Treiber f&uuml;r die Cyberjack Pinpad/ecom-Familie
+      von USB Kartenleseger&auml;ten implementiert den CTAPI
+      Standard in der Version 1.1 sowie das PC/SC-Interface von
+      pcsc-lite.</p>
+
+      <p>Er ist vollst&auml;ndig im Userspace implementiert.
+      Dadurch entfallen Schwierigkeiten mit unterschiedlichen
+      Kernel-Versionen, dem Kompilieren und Patchen von Kerneln
+      etc.</p>
+
+      <p>S&auml;mtliche Zugriffe werden &uuml;ber das <tt class=
+      "literal">usb devfs</tt> in <tt class=
+      "filename">/proc/bus/usb</tt> (oder <tt class=
+      "filename">/dev/bus/usb</tt> f&uuml;r udev-basierte systeme)
+      abgewickelt.</p>
+
+      <p>Behandlung von Dateirechten geschieht <span class=
+      "emphasis"><i class=
+      "emphasis">ausschlie&szlig;lich</i></span> &uuml;ber udev.
+      Das Skript <tt class="filename">cyberjack.rules</tt> - falls
+      es nach <tt class="filename">/etc/udev/rules.d</tt>
+      installiert wurde - wird automatisch von udev aufgerufen,
+      sobald der Leser angeschlossen wird. Es setzt die Dateirechte
+      f&uuml;r das entsprechende Ger&auml;t, so da&szlig;
+      anschliessend die Benutzer der Gruppe <tt class=
+      "literal">cyberjack</tt> darauf zugreifen k&ouml;nnen.</p>
+
+      <p>F&uuml;r mehr Informationen &uuml;ber den Kartenleser
+      selbst besuchen Sie bitte <a href=
+      "http://www.reiner-sct.com/" target=
+      "_top">http://www.reiner-sct.com/</a>. Dort finden Sie auch
+      einen Onlineshop, in dem Sie diesen Leser bestellen
+      k&ouml;nnen.</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN29" id="AEN29">2. Von diesem
+      Treiber unterst&uuml;tzte Ger&auml;te</a></h2>
+
+      <p>Die folgenden Reiner-SCT Kartenleser werden
+      unterst&uuml;tzt:</p>
+
+      <div class="informaltable">
+        <a name="AEN32" id="AEN32"></a>
+
+        <table border="1" class="CALSTABLE">
+          <col>
+          <col>
+
+          <thead>
+            <tr>
+              <th>Product</th>
+
+              <th>ProductID</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>REINER SCT cyberJack pinpad USB</td>
+
+              <td>0x100</td>
+            </tr>
+
+            <tr>
+              <td>REINER SCT cyberJack e-com USB</td>
+
+              <td>0x100</td>
+            </tr>
+
+            <tr>
+              <td>REINER SCT cyberJack pinpad_a USB</td>
+
+              <td>0x300</td>
+            </tr>
+
+            <tr>
+              <td>REINER SCT cyberJack e-com_a USB</td>
+
+              <td>0x400</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>Mit dem Kommando <b class="command">lsusb</b>
+      k&ouml;nnen Sie sich alle USB-Ger&auml;te anzeigen lassen. Es
+      zeigt die Hersteller- und Ger&auml;tekennung aller
+      angeschlossenen Ger&auml;te an, beispielsweise:
+
+      <p></p>
+
+      <div class="informaltable">
+        <a name="AEN53" id="AEN53"></a>
+
+        <table border="1" class="CALSTABLE">
+          <col>
+          <col>
+          <col>
+          <col>
+
+          <thead>
+            <tr>
+              <th>Bus Nr</th>
+
+              <th>Device Nr</th>
+
+              <th>&nbsp;</th>
+
+              <th>VeID:PrID</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Bus 002</td>
+
+              <td>Device 002</td>
+
+              <td>ID</td>
+
+              <td>0451:1446</td>
+            </tr>
+
+            <tr>
+              <td>Bus 002</td>
+
+              <td>Device 006</td>
+
+              <td>ID</td>
+
+              <td>0c4b:0400</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Die REINER SCT Herstellerkennung ist <tt class=
+      "literal">0c4b</tt>. Die Produktkennungen finden Sie in der
+      vorigen Tabelle.</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN74" id="AEN74">3.
+      Distributions-spezifische Hinweise</a></h2>
+
+      <p>Sie finden alle Pakete unter <a href=
+      "http://www.reiner-sct.com/content/view/32/43/#linux" target=
+      "_top">http://www.reiner-sct.com/content/view/32/43/#linux</a>.</p>
+
+      <p>Die meisten Pakete erzeugen eine Gruppe <span class=
+      "emphasis"><i class="emphasis">cyberjack</i></span>. Dieser
+      Gruppe m&uuml;ssen alle Benutzer zugeordnet werden, die
+      Zugriff auf das Ger&auml;t haben sollen. Das erreichen Sie am
+      einfachsten &uuml;ber das KDE-Programm <span class=
+      "emphasis"><i class="emphasis">kuser</i></span> oder das
+      Administrations-Programm Ihres Systems (bei SuSE z.B.
+      <span class="emphasis"><i class="emphasis">yast</i></span>).
+      Eine Ausnahme stellt hier SuSE 10.1 dar, hier m&uuml;ssen Sie
+      keine Benutzer- Zuordnung vornehmen (ab SuSE 10.2 hingegen
+      schon).</p>
+
+      <p>Nach der Installation des Paketes und der
+      Benutzerzuordnung sollten Sie Ihren Rechner neu starten,
+      damit die &Auml;nderungen g&uuml;ltig werden.</p>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN83" id="AEN83">3.1.
+        RPM-basiert</a></h3>
+
+        <p>Reiner-SCT bietet RPM-Pakete f&uuml;r die folgenden
+        Distributionen an:</p>
+
+        <ul>
+          <li>
+            <p>SuSE 10.3</p>
+          </li>
+
+          <li>
+            <p>SuSE 10.2</p>
+          </li>
+
+          <li>
+            <p>SuSE 10.1</p>
+          </li>
+
+          <li>
+            <p>SuSE 10.0</p>
+          </li>
+
+          <li>
+            <p>Fedora Core 7</p>
+          </li>
+
+          <li>
+            <p>Fedora Core 6</p>
+          </li>
+
+          <li>
+            <p>Fedora Core 5</p>
+          </li>
+        </ul>
+
+        <p>Installieren Sie das entsprechende Paket einfach durch
+        das folgende Kommando: <kbd class="userinput">&#13; rpm -i
+        &lt;Paketdatei&gt;</kbd></p>
+
+        <p>Sollten Sie bereits ein &auml;lteres Treiberpaket
+        installiert haben, verwenden Sie stattdessen das folgende
+        Kommando: <kbd class="userinput">&#13; rpm -U
+        &lt;Paketdatei&gt;</kbd></p>
+
+        <p>Es gibt allerdings eine Besonderheit bei Verwendung von
+        SuSE10.0 auf einem 64-Bit-System mit der Anwendung
+        "Moneyplex": Da diese Anwendung leider eine
+        32-Bit-Anwendung ist, kann sie nur mit der 32-Bit-Version
+        unseres Treibers arbeiten. Leider war der Kernel von
+        SuSE10.0 noch nicht in der Lage, alle 32-Bit-Aufrufe des
+        Treibers nach 64-Bit umzuwandeln. Hier muss daher eine
+        Aenderung an der Datei /etc/cyberjack.conf vorgenommen
+        werden. Fuegen Sie bitte die folgende Zeile ein:
+        "flags=0x20000".</p>
+
+        <div class="section">
+          <hr>
+
+          <h4 class="section"><a name="AEN106" id="AEN106">3.1.1.
+          Einrichtung unter SuSE Linux</a></h4>
+
+          <p>Nach der Installation des Treibers muessen Sie die
+          Benutzer, die auf den Leser zugreifen koennen sollen, in
+          die Gruppe "cyberjack" einfuegen.</p>
+
+          <p>Am einfachsten geschieht dies mit Yast: Starten Sie
+          Yast, rufen Sie das Menu "Sicherheit und Benutzer" auf
+          und dort "Gruppen bearbeiten und anlegen".</p>
+
+          <p>Es erscheint ein Fenster, das standardmaessig die
+          Systemgruppen nicht anzeigt, daher muessen Sie den Filter
+          aendern. Klicken Sie dazu unten rechts auf "Filter
+          festlegen" und waehlen Sie dort "Systemgruppen".
+          Daraufhin sollten Sie in der Liste auch die Gruppe
+          "cyberjack" finden, die Sie dann markieren muessen.
+          Anschliessend klicken Sie unten auf "Bearbeiten".</p>
+
+          <p>In dem Fenster, welches dann erscheint, setzen Sie bei
+          den aufgefuehrten Benutzern, die auf den Leser zugreifen
+          koennen sollen, die Markierung.</p>
+
+          <p>Klicken Sie nun auf "Uebernehmen" und starten Sie das
+          System neu, Der Leser sollte nun fuer die markierten
+          Benutzer verwendbar sein.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN113" id="AEN113">3.2.
+        DEB-basiert</a></h3>
+
+        <p>Reiner-SCT bietet DEB-Pakete f&uuml;r die folgenden
+        Distributionen:</p>
+
+        <ul>
+          <li>
+            <p>Debian stable</p>
+          </li>
+
+          <li>
+            <p>Debian unstable</p>
+          </li>
+
+          <li>
+            <p>Ubuntu 6.10</p>
+          </li>
+
+          <li>
+            <p>Ubuntu 7.04</p>
+          </li>
+
+          <li>
+            <p>Ubuntu 7.10</p>
+          </li>
+        </ul>
+
+        <p>Installieren Sie das entsprechende Paket mit:
+        <kbd class="userinput">&#13; dpkg -i
+        &lt;Paketdatei&gt;</kbd></p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN129" id="AEN129">3.3. Alle
+        anderen Distributionen</a></h3>
+
+        <p>Es gibt momentan wenig Erfahrungen mit anderen
+        Linux-Distributionen. Haben Sie ein RPM-basiertes System,
+        so k&ouml;nnen Sie probieren eigene RPM-Paket zu erstellen:
+        <kbd class="userinput">&#13; rpm --rebuild
+        &lt;Quellpaketdatei&gt;</kbd> oder <kbd class=
+        "userinput">&#13; rpmbuild --rebuild
+        &lt;Quellpaketdatei&gt;</kbd></p>
+
+        <p>Falls Sie den Treiber selber kompilieren wollen,
+        wechseln Sie in das Hauptverzeichnis des entpackten
+        Treiber-Paketes und geben Sie die folgenden Befehle ein:
+        <kbd class="userinput">&#13; ./configure make</kbd></p>
+
+        <p>Anschlie&szlig;end k&ouml;nnen Sie den Treiber auf Ihr
+        System installieren. Dazu ben&ouml;tigen Sie sehr
+        wahrscheinlich Administrator-Rechte. <kbd class=
+        "userinput">&#13; make install</kbd></p>
+      </div>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN138" id="AEN138">4.
+      Firmware-Update</a></h2>
+
+      <p>Die aktuelle Version dieses Treibers enthaelt das Tool
+      "cjflash" welches das Aktualisieren der Firmware des Lesers
+      erlaubt.</p>
+
+      <p>Derzeit koennen damit allerdings nur die neuesten
+      Cyberjack-Leser aktualisiert werden (mit der Produkt-Kennung
+      0x400)</p>
+
+      <p>Der Linux-Treiber funktioniert mit diesen Geraeten nur mit
+      einer Firmware in der Version groesser oder gleich 3.0.6.
+      Sollte Ihr Leser eine aeltere Version enthalten, ist ein
+      Update zwingend noetig. Auch nach diesem Update funktioniert
+      der Leser weiterhin auch unter Windows.</p>
+
+      <p>Um die Firmware zu aktualiseren geben Sie bitte das
+      folgenden Kommando in einer Konsole ein: <kbd class=
+      "userinput">&#13; cjflash 1 Kernel_V30_07.bin
+      Kernel_V30_07.bin.ecoma.sgn ecoma2.bky</kbd></p>
+
+      <p>Das erste Argument ist die Nummer des Lesers (beginnend
+      mit "1", der 2. Leser hat die Nummer "2" etc). Das naechste
+      Argument ist der Name der Datei mit der neuen Firmware
+      gefolgt vom Namen der Datei mit der Signatur der neuen
+      Firmware.</p>
+
+      <p>Nachdem Sie das Kommando eingegeben haben fragt der Leser
+      nach einer Bestaetigung. Druecken Sie die "OK"-Taste auf der
+      Tastatur des Lesers zur Bestaetigung oder brechen Sie den
+      Vorgang mit "CANCEL" ab.</p>
+
+      <p>Sollte der Leser "haengen" nachdem Sie "OK" oder "CANCEL"
+      gedrueckt haben, muessen Sie den Leser abziehen und neu
+      anschliessen. Anschliessend muessen Sie eine leicht
+      modifizierte Version des obrigen Kommandos verwenden:
+      <kbd class="userinput">&#13; CJ_USB_MODE=1 cjflash 1
+      Kernel_V30_07.bin Kernel_V30_07.bin.ecoma.sgn</kbd></p>
+
+      <p>Hiermit wird die Umgebungsvariable "CJ_USB_MODE" gesetzt
+      bevor das Update durchgefuehrt wird. Dadurch weiss der
+      Treiber, dass es sich um einen Leser mit einer fuer Linux
+      problematischen Firmware handelt und spricht ihn etwas anders
+      an.</p>
+
+      <p>Bitte setzen Sie die Umgebungsvariable nur, wenn "cjflash"
+      sonst nicht funktioniert!</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN151" id="AEN151">5.
+      Support</a></h2>
+
+      <p>Support f&uuml;r diesen Treiber bietet REINER SCT. E-mail:
+      support@reiner-sct.com Postadresse: Schwabacher Str. 34,
+      90762 F&uuml;rth, Deutschland</p>
+
+      <p>Bitte f&uuml;gen Sie ihrer Problembeschreibung die
+      folgenden Informationen bei:</p>
+
+      <ul>
+        <li>
+          <p>Name und Version des verwendeten Programmes, mit dem
+          der Fehler auftrat</p>
+        </li>
+
+        <li>
+          <p>die vollst&auml;ndige Fehlermeldung</p>
+        </li>
+
+        <li>
+          <p>den Namen und die Version der von Ihnen verwendeten
+          Linux-Distribution (z.B. SuSE 10.1, Debian 3.0r1
+          testing)</p>
+        </li>
+
+        <li>
+          <p>CPU-Typ (z.B. der Inhalt der Datei <tt class=
+          "filename">/proc/cpuinfo</tt>)</p>
+        </li>
+
+        <li>
+          <p>Kernelversion (z.B. die Ausgabe des Befehls <b class=
+          "command">uname -r</b>)</p>
+        </li>
+
+        <li>
+          <p>Liste der angeschlossenen USB-Ger&auml;te (z.B. die
+          Ausgabe des Befehls <b class="command">lsusb</b>)</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN171" id="AEN171">6.
+      Troubleshooting</a></h2>
+
+      <div class="section">
+        <h3 class="section"><a name="AEN173" id="AEN173">6.1. Erste
+        Schritte</a></h3>
+
+        <p>Mit dem Treiber wird das Tool "cyberjack" installiert.
+        Es erzeugt Dateien mit Daten, die fuer den Support von
+        Reiner SCT wichtig sind. Fuehren Sie daher in einer Konsole
+        den folgenden Befehl aus; <kbd class=
+        "userinput">cyberjack</kbd></p>
+
+        <p>Dabei entstehen im aktuellen Verzeichnis 3 Dateien.
+        Schauen Sie sich zuerst die Datei <tt class=
+        "filename">cyberjack-hints.log</tt> an. Sie enthaelt
+        eventuell bereits Hinweise, was Sie auf Ihrem System tun
+        koennen, um das Problem selbst zu beheben (oft sind es nur
+        Kleinigkeiten).</p>
+
+        <p>Sollte das nicht zum Erfolg fuehren, senden Sie bitte
+        die ebenfalls entstandene Datei "cyberjack.xml" mit Ihrer
+        Support-Anfrage mit, damit wir alle noetigen Informationen
+        haben, um Ihnen helfen zu koennen.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN180" id="AEN180">6.2.
+        Aeltere cyberJacks</a></h3>
+
+        <p>cyberJacks mit der USB-Kennung 0x100 (alte Ecom/Pinpad)
+        machen mitunter Probleme mit aktuellen Treibern.</p>
+
+        <p>Falls das bei Ihnen der Fall sein sollte, gibt es die
+        Moeglichkeit, das Verhalten des Treibers zu
+        beeinflussen:</p>
+
+        <p><kbd class="userinput">cyberjack addflags
+        0x100000</kbd></p>
+
+        <p>Dieses Kommando muessen Sie als root ausfuehren. Es
+        setzt ein Flag welches den Treiber bei jedem Initialisieren
+        des Lesers ein Reset-Kommando schicken laesst.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN187" id="AEN187">6.3.
+        Gro&szlig;e Anzahl von Lesern</a></h3>
+
+        <p>Der cyberJack wurde mit bis zu 52 gleichzeitig
+        angeschlossenen Ger&auml;ten (&uuml;ber 7-Port Hubs)
+        getestet. Dabei gibt es allerdings etwas zu beachten:</p>
+
+        <ul>
+          <li>
+            <p>Linux bis Version 2.4.19 h&auml;ngt sich
+            vollst&auml;ndig auf, wenn zu viele Ger&auml;te
+            angeschlossen sind. Versionen ab 2.4.20 weisen dieses
+            Problem nicht mehr auf.</p>
+          </li>
+
+          <li>
+            <p>Es treten manchmal timeout-Fehler auf. Das Problem
+            scheint hier im Linux-Kernel selbst zu liegen
+            (usb-uhci). Mit schnelleren Rechnern tritt dieses
+            Problem nicht mehr auf (ab 2GHz).</p>
+          </li>
+
+          <li>
+            <p>Sollte es immer noch nicht wie gew&uuml;nscht
+            funktionieren, sollten Sie die beteiligten
+            USB-Controller-Karten und/oder Hubs austauschen. Es
+            gibt hier offensichtlich eine besonders gro&szlig;e
+            Streubreite in der Qualit&auml;t dieser
+            Ger&auml;te.</p>
+          </li>
+        </ul>
+
+        <p>Der Daten-Durchsatz nimmt nicht ab, wenn Sie statt einem
+        50 Kartenleser anschlie&szlig;en und konstant auslesen
+        (getestet mit den Kommandos SELECT und READ_BINARY).</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN198" id="AEN198">6.4.
+        Hotplugging</a></h3>
+
+        <p>Linux unterst&uuml;tzt hotplugging (das Einstecken und
+        Entfernen von USB-Ger&auml;ten bei laufendem Betrieb). Dies
+        wird durch das udev-System implementiert.</p>
+
+        <p>Sie finden udev-Skriptdateien f&uuml;r die REINER SCT
+        Kartenleser im Verzeichnis <tt class=
+        "filename">etc/udev</tt> des Quellpaketes.</p>
+
+        <p>Da udev-Skripte Distributions-spezifisch sind (nicht
+        alle verwenden udev, und SuSE verwendet ausserdem resmgr,
+        zudem sind auch die Namen der Skripte nicht einheitlich),
+        k&ouml;nnen wir nicht f&uuml;r alle am Markt existierenden
+        Distributionen die passenden Skripte bereitstellen. Die von
+        uns gelieferten RPM- und DEB-Pakete installieren die
+        f&uuml;r das jeweilige System passenden Dateien an die
+        vorgesehene Stelle, so da&szlig; mit diesen Paketen
+        hotplugging problemlos m&ouml;glich ist.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN204" id="AEN204">6.5.
+        Logging</a></h3>
+
+        <p>Dieser Treiber erlaubt die Aufzeichnung der
+        Kommunikation mit dem Kartenleser. Sie schalten es ein,
+        indem Sie als root das Kommando <kbd class=
+        "userinput">cyberjack addflags 0xffff</kbd> ausfuehren.
+        Dann schreibt der Treiber die Logmeldungen in die Datei
+        <tt class="filename">/tmp/cj.log</tt>.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN209" id="AEN209">7. Bekannte
+      Probleme</a></h2>
+
+      <p>Leider enthalten alle Kernel bi einschliesslich Version
+      2.6.12-rc5 einen schweren Fehler in der Behandlung von
+      asynchronen URB's (USB Request Block) im Userspace. Dieser
+      Fehler hat nichts mit dem Reiner SCT Treiber zu tun, dennoch
+      betrifft er auch unseren Treiber f&uuml;r PC/SC. Der Fehler
+      tritt auf, wenn der PC/SC Dienst beendet wird und kann im
+      schlimmsten Fall zum vollst&auml;ndigen Absturz des Kernels
+      f&uuml;hren.</p>
+
+      <p>Es wurde eine L&ouml;sung erarbeitet, die aber bisher
+      nicht offizieller Bestandteil des Linux-Kernels ist. Wir
+      bieten unsere L&ouml;sung aber als patch an (in Form der
+      Datei patches/usb-async_urb-devio-oops-fix.patch).</p>
+
+      <p>Falls Sie PC/SC in Verbindung mit einem betroffenen Kernel
+      verwenden wollen, raten wir daher dringend dazu den
+      mitgelieferten Patch anzuwenden.</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN214" id="AEN214">8.
+      Anwendungen</a></h2>
+
+      <div class="section">
+        <h3 class="section"><a name="AEN216" id="AEN216">8.1.
+        Moneyplex</a></h3>
+
+        <p>Moneyplex bringt seine eigenen Treiber fuer die
+        bekanntesten Geraete mit. Leider sind die Treiber fuer den
+        Cyberjack, die sich auf der Moneyplex-CD befinden, meist
+        veraltet und funktionieren auf aktuellen Systemen
+        nicht.</p>
+
+        <p>Sie sollten daher unbedingt den jeweils aktuellsten
+        Treiber von unserer Homepage herunterladen und
+        installieren.</p>
+
+        <p>Anschliessend muessen Sie dann im entsprechenden
+        Konfigurationsmenue von Moneyplex direkt unseren Treiber
+        angeben (je nach System entweder in /usr/lib oder in
+        /usr/lib/readers, Dateiname ist
+        "libctapi-cyberjack.so".</p>
+
+        <p>Damit sollte Moneyplex auch mit dem Cyberjack
+        zusammenarbeiten koennen.</p>
+
+        <div class="section">
+          <hr>
+
+          <h4 class="section"><a name="AEN222" id="AEN222">8.1.1.
+          Moneyplex auf 64-Bit-Systemen</a></h4>
+
+          <p>Moneyplex ist eine 32-Bit-Anwendung. Als solche kann
+          sie zwar auch auf 64-Bit-Systemen ausgefuehrt werden,
+          findet aber auf solchen Systemen keine
+          Kartenleser-Treiber (weil es nach 32-Bit-Treibern sucht,
+          die aber auf einem solchen System normalerweise nicht
+          vorhanden sind).</p>
+
+          <p>Es wurde allerdings auch fuer diesen Fall eine Loesung
+          mit Matrica erarbeitet. Moneyplex liefert - spaetestens
+          nach einem Update - einen Proxy-Treiber mit
+          (libproxy-cyberjack.so), welcher einer 32-Bit-Anwendung
+          erlaubt, auf die installierten 64-Bit-Treiber
+          zuzugreifen.</p>
+
+          <p>Diesen Treiber finden Sie normalerweise im
+          Moneyplex-Verzeichnis ($HOME/moneyplex), und dort
+          ueblicherweise im Unterverzeichnis "ctapi". Waehlen Sie
+          diesen Treiber in Moneyplex aus.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN227" id="AEN227">9.
+      Zus&auml;tzliche Information</a></h2>
+
+      <div class="section">
+        <h3 class="section"><a name="AEN229" id="AEN229">9.1.
+        CT-API</a></h3>
+
+        <p>Die CT-API Spezifikation erhalten Sie auf der Seite
+        <a href="http://www.darmstadt.gmd.de/~eckstein/CT/mkt.html"
+        target=
+        "_top">http://www.darmstadt.gmd.de/~eckstein/CT/mkt.html</a></p>
+
+        <p>Bitte beachten Sie, da&szlig; die Port-Nummern bei 1
+        beginnen (wie in den Spezifikationen vorgesehen).</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN234" id="AEN234">9.2.
+        PC/SC</a></h3>
+
+        <p>Dieser Treiber bietet inzwischen auch einen
+        PC/SC-Treiber f&uuml;r pcsc-lite an. Er wurde mit
+        pcsc-lite-1.2.0 getestet.</p>
+
+        <div class="section">
+          <hr>
+
+          <h4 class="section"><a name="AEN237" id="AEN237">9.2.1.
+          Installation</a></h4>
+
+          <p>F&uuml;r RPM-basierte Systeme ist der sogenannte
+          IFD-Treiber im Paket ctapi-cyberjack-ifd enthalten.</p>
+
+          <p>Falls Sie den Treiber aus dem Quellpaket selber
+          kompilieren, wird durch <b class="command">make
+          install</b> der IFD-Treiber an die passende Stelle in
+          Ihrem System (normalerweise <tt class=
+          "filename">/usr/lib/pcsc/drivers/</tt>) installiert.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN243" id="AEN243">9.3.
+        Multithreading</a></h3>
+
+        <p>Dieser Treiber ist nicht thread-safe, d.h. es
+        k&ouml;nnen nicht mehrere Threads des gleichen Programmes
+        auf den gleichen Leser zugreifen (dies w&uuml;rde aber
+        ohnehin meist zu Problemen auf der Karte f&uuml;hren).</p>
+
+        <p>Allerdings k&ouml;nnen unterschiedliche Threads des
+        gleichen Programmes auf unterschiedliche Ger&auml;te
+        zugreifen. So k&ouml;nnen also beispielsweise 3 Threads
+        gleichzeitig auf 3 Karten in 3 unterschiedlichen
+        Ger&auml;ten zugreifen.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN247" id="AEN247">9.4.
+        Kommandola&auml;nge</a></h3>
+
+        <p>Die Kommandol&auml;nge ist derzeit auf ISO7816 short
+        commands reduziert. Dies bedeutet allerdings im normalen
+        Betrieb keine Einschr&auml;nkung.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN250" id="AEN250">9.5.
+        Tastendruck Callback</a></h3>
+
+        <p></p>
+
+        <div class="funcsynopsis">
+          <a name="AEN253" id="AEN253"></a>
+
+          <p><code><code class="FUNCDEF">IS8
+          rsct_setkeycb</code>(IU16ctn, void (*cb) (void
+          *user_data));</code></p>
+        </div>
+
+        <p>Die Funktion <code class="function">rsct_setkeycb</code>
+        wurde hinzugef&uuml;gt, um laufenden Programmen eine
+        R&uuml;ckmeldung &uuml;ber gedr&uuml;ckte Tasten des Lesers
+        zu geben. Die Funktion, die als 2. Argument dieses Aufrufes
+        geliefert wird, wird jeweils aufgerufen, wenn ein C4- oder
+        F4 S-Block vom Leser empfangen wurde. Die Anwendung kann
+        dann beispielsweise einen Piepton erzeugen, oder die Anzahl
+        der gedr&uuml;ckten Tasten anzeigen.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN264" id="AEN264">9.6.
+        Informationen zur Treiberversion</a></h3>
+
+        <p></p>
+
+        <div class="funcsynopsis">
+          <a name="AEN267" id="AEN267"></a>
+
+          <p><code><code class="FUNCDEF">void
+          rsct_version</code>(IU8*vmajor, IU8*vminor,
+          IU8*vpatchlevel, IU16*vbuild);</code></p>
+        </div>
+
+        <p>Die Funktion <code class="function">rsct_version</code>
+        gibt die vollstaendige Version des Treibers in den
+        uebergebenen Variablen zurueck.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN281" id="AEN281">9.7.
+        Zusaetzliche CT_init Ersatz-Funktion</a></h3>
+
+        <p></p>
+
+        <div class="funcsynopsis">
+          <a name="AEN284" id="AEN284"></a>
+
+          <p><code><code class="FUNCDEF">IS8
+          rsct_init_name</code>(IU16ctn, const
+          char*device_name);</code></p>
+        </div>
+
+        <p>Die Funktion <code class=
+        "function">rsct_init_name</code> erlaubt die direkte Angabe
+        des Geraetes wie bei PC/SC. Damit kann eindeutig festgelegt
+        werden, welches Geraet verwendet werden soll. Der
+        Geraetename ist wie folgt aufgebaut:
+        "usb:VENDOR_ID/PRODUCT_ID:libusb:BUS_ID:DEVICE_ID". Fuer
+        einen neuen Cyberjack an /proc/bus/usb/003/002 lautet der
+        Name demnach: "usb:0c4b/0300:libusb:003:002".</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN294" id="AEN294">9.8. Feste
+        Zurodnung der Portnummer zu Lesern</a></h3>
+
+        <p>Die Funktion <code class="function">CT_init</code>
+        erlaubt eine feste Zurdnung von Portnummern zu bestimmten
+        Lesern. Das bedeutet beispielsweise, dass immer der gleiche
+        Leser unter der gleichen Portnummer angesprochen wird, egal
+        an welchem USB-Port das Geraet angeschlossen ist.</p>
+
+        <p>Dies erreichen Sie, indem Sie als Portnummer die
+        folgenden Nummern verwenden:</p>
+
+        <p></p>
+
+        <ul>
+          <li>
+            <p>0x9000 (dezimal 36864) fuer das erste Geraet</p>
+          </li>
+
+          <li>
+            <p>0x9001 (dezimal 36865) fuer das zweite Geraet</p>
+          </li>
+        </ul>und so weiter.
+
+        <p>Die Zuordnung geschieht ueber eine Text-Datei, in der
+        pro Zeile eine Seriennummer gespeichert ist (normalerweise
+        ist dies $HOME/cyberjack_serials).</p>
+
+        <p>Der Treiber aktualisiert diese Datei selbststaendig, es
+        ist hierzu kein Benutzereingriff noetig. Falls die Datei
+        beim Aufruf von CT_init() noch nicht existiert, wird sie
+        erzeugt. Wenn sie bereits existiert, und der angeschlossene
+        Leser bereits in dieser Datei aufgefuehrt wird, bleibt die
+        Datei unveraendert. Der Treiber fuegt lediglich neue Leser
+        an das Ende der Datei an.</p>
+
+        <p>Die erste Seriennummer dieser Datei wird ueber den
+        Portwert 0x9000 angesprochen, die zweite ueber 0x9001
+        etc.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN308" id="AEN308">9.9.
+        Serielle Leser</a></h3>
+
+        <p>Der aktuelle Treiber unterstuetzt den Lesertyp Ecom A
+        via seriellem Anschluss.</p>
+
+        <p>Dazu muessen Sie die folgenden Portnummern
+        verwenden:</p>
+
+        <p></p>
+
+        <ul>
+          <li>
+            <p>0xa000 (dezimal 40960) fuer Anschlu&szlig; an COM1
+            (/dev/ttyS0)</p>
+          </li>
+
+          <li>
+            <p>0xa001 (dezimal 40961) fuer Anschlu&szlig; an COM2
+            (/dev/ttyS1)</p>
+          </li>
+        </ul>und so weiter.
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN318" id="AEN318">9.10.
+        Zurodnung alter Cyberjack zu ttyUSB-Devices</a></h3>
+
+        <p>Die Funktion <code class="function">CT_init</code>
+        erlaubt fuer aeltere Cyberjack Ecoms und PinPads (mit der
+        USB-Id 0x100) eine direkte Zurodnung von Port-Werten zu
+        /dev/ttyUSBx-Geraeten.</p>
+
+        <p>Dies erreichen Sie, indem Sie als Portnummer die
+        folgenden Nummern verwenden:</p>
+
+        <p></p>
+
+        <ul>
+          <li>
+            <p>0x8000 (dezimal 32768) fuer /dev/ttyUSB0</p>
+          </li>
+
+          <li>
+            <p>0x8001 (dezimal 32769) fuer /dev/ttyUSB1</p>
+          </li>
+        </ul>und so weiter.
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN329" id="AEN329">9.11.
+        Pin-Ueberpruefung mit der PC/SC Funktion
+        SCardControl</a></h3>
+
+        <p>Die folgende Tabelle zeigt Werte fuer die einzelnden
+        Felder der Struktur PSCS_VERIFY_STRUCTURE die mit ASCII und
+        FPIN2-kodierten Pins getestet wurden.</p>
+
+        <div class="informaltable">
+          <a name="AEN332" id="AEN332"></a>
+
+          <table border="1" class="CALSTABLE">
+            <col>
+            <col>
+            <col>
+
+            <thead>
+              <tr>
+                <th>Feld</th>
+
+                <th>ASCII</th>
+
+                <th>FPIN2</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>bTimerOut</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+
+              <tr>
+                <td>bTimerOut2</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+
+              <tr>
+                <td>bmFormatString</td>
+
+                <td>82</td>
+
+                <td>81</td>
+              </tr>
+
+              <tr>
+                <td>bmPINBlockString</td>
+
+                <td>04</td>
+
+                <td>48</td>
+              </tr>
+
+              <tr>
+                <td>bmPINLengthFormat</td>
+
+                <td>00</td>
+
+                <td>04</td>
+              </tr>
+
+              <tr>
+                <td>wPINMaxExtraDigit</td>
+
+                <td>0408</td>
+
+                <td>0408</td>
+              </tr>
+
+              <tr>
+                <td>bEntryValidationCondition</td>
+
+                <td>02</td>
+
+                <td>02</td>
+              </tr>
+
+              <tr>
+                <td>bNumberMessage</td>
+
+                <td>01</td>
+
+                <td>01</td>
+              </tr>
+
+              <tr>
+                <td>wLangId</td>
+
+                <td>0904</td>
+
+                <td>0904</td>
+              </tr>
+
+              <tr>
+                <td>bMsgIndex</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+
+              <tr>
+                <td>bTeoPrologue 0-2</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN384" id="AEN384">10.
+      Mitgelieferte Anwendungen</a></h2>
+
+      <div class="section">
+        <h3 class="section"><a name="AEN386" id="AEN386">10.1.
+        cyberjack</a></h3>
+
+        <p>Diese Anwendung dient zum einen dem Testen des Treibers
+        und Lesers zum anderen der Aenderung von Einstellungen des
+        Treibers.</p>
+
+        <p>Die Einstellungen des Treibers finden sich in der
+        Konfigurationsdatei <tt class=
+        "filename">cyberjack.conf</tt>. Es wird je nach
+        Distribution in dem Verzeichnis <tt class=
+        "filename">/etc</tt>, <tt class=
+        "filename">/etc/cyberjack</tt> oder <tt class=
+        "filename">/usr/etc</tt> erwartet.</p>
+
+        <p>Standardmaessig wird von den binaeren Paketen eine
+        Beispieldatei mit dem Namen <tt class=
+        "filename">cyberjack.conf.default</tt> angelegt die als
+        Ausgangsdatei fuer eigene Konfigurationen verwendet werden
+        kann.</p>
+
+        <p>Gespeicherte Einstellungen beinhalten derzeit eine Reihe
+        von Flags sowie einige Dateinamen (wie z.B. der Name der
+        Logdatei etc).</p>
+
+        <div class="section">
+          <hr>
+
+          <h4 class="section"><a name="AEN397" id="AEN397">10.1.1.
+          Kommandos addflags/delflags</a></h4>
+
+          <p>Da die Konfiguration je nach Distribution an
+          unterschiedlichen Stellen im System abgelegt wird wurde
+          das Tool "cyberjack" um zwei neue Kommandos
+          erweitert:</p>
+
+          <ul>
+            <li>
+              <p>cyberjack addflags 0xffff</p>
+            </li>
+
+            <li>
+              <p>cyberjack delflags 0xffff</p>
+            </li>
+          </ul>
+
+          <p>Damit koennen bestimmte Flags gesetzt oder geloescht
+          werden. Derzeit stehen die folgenden Flags zur
+          Verfuegung:</p>
+
+          <div class="informaltable">
+            <a name="AEN406" id="AEN406"></a>
+
+            <table border="1" class="CALSTABLE">
+              <col>
+              <col>
+              <col>
+
+              <thead>
+                <tr>
+                  <th>Wert</th>
+
+                  <th>Name</th>
+
+                  <th>Beschreibung</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>0x00000001</td>
+
+                  <td>DEBUG_GENERIC</td>
+
+                  <td>Schaltet generelle Debug-Meldungen ein. Diese
+                  Meldungen werden in die Logdatei geschrieben
+                  (normalerweise /tmp/cj.log).</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000002</td>
+
+                  <td>DEBUG_READER</td>
+
+                  <td>Schaltet Leser-bezogene Debug-Meldungen
+                  ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000004</td>
+
+                  <td>DEBUG_CTAPI</td>
+
+                  <td>Schaltet CTAPI-bezogene Debug-Meldungen
+                  ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000008</td>
+
+                  <td>DEBUG_AUSB</td>
+
+                  <td>Schaltet USB-bezogene Debug-Meldungen
+                  ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000010</td>
+
+                  <td>DEBUG_CJPPA</td>
+
+                  <td>Schaltet bestimmte Debug-Meldungen des
+                  Cyberjack PinPad A ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000020</td>
+
+                  <td>DEBUG_ECOM</td>
+
+                  <td>Schaltet bestimmte Debug-Meldungen des
+                  Cyberjack Ecom ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000040</td>
+
+                  <td>DEBUG_TRANSFER</td>
+
+                  <td>Schaltet IO-bezogene Debug-Meldungen
+                  ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000080</td>
+
+                  <td>DEBUG_USB</td>
+
+                  <td>Schaltet weitere USB-bezogene Debug-Meldungen
+                  ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000100</td>
+
+                  <td>DEBUG_IFD</td>
+
+                  <td>Schaltet IFD-bezogene Debug-Meldungen ein
+                  (PC/SC)</td>
+                </tr>
+
+                <tr>
+                  <td>0x00000200</td>
+
+                  <td>DEBUG_ECA</td>
+
+                  <td>Schaltet bestimmte Debug-Meldungen des
+                  Cyberjack Ecom A ein.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00001000</td>
+
+                  <td>NO_BEEP</td>
+
+                  <td>Schaltet die Signaltoene bei Tastendruecken
+                  aus.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00002000</td>
+
+                  <td>ECOM_KERNEL</td>
+
+                  <td>Verwendet den Kernel-Treiber fuer den
+                  Cyberjack Ecom/Pinpad mit der USB ID 0x100. Dies
+                  kann verwendet werden, wenn der normale
+                  Userspace-Treiber auf Ihrem System nicht
+                  funktioniert.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00004000</td>
+
+                  <td>ALLOW_INPUT</td>
+
+                  <td>Erlaubt das Kommando INPUT. Dies ist
+                  normalerweise aus Sicherheitsgruenden
+                  deaktiviert. Nur ganz spezielle Anwendungen
+                  benoetigen dieses Kommando, insbesondere
+                  Banking-Programme benoetigen es jedoch nicht. Sie
+                  sollten sich daher gut ueberlegen, ob Sie das
+                  Kommando aktivieren wollen, denn es kann dazu
+                  verwendet werden, Ihnen eine unsichere
+                  Pin-Eingabe als sicher vorzutaeuschen.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00008000</td>
+
+                  <td>BEEP_NO_X11</td>
+
+                  <td>Normalerweise versucht der Treiber fuer die
+                  Signaltoene auf einen laufenden X11-Server
+                  zuzugreifen (Ihre grafische Oberflaeche). Wenn
+                  dies nicht gelingt, wird versucht die Signaltoene
+                  ueber andere Methoden zu erzeugen. Mit diesem
+                  Flag koennen Sie verhindern, dass der X11-Server
+                  kontaktiert wird.</td>
+                </tr>
+
+                <tr>
+                  <td>0x00010000</td>
+
+                  <td>RESET_BEFORE</td>
+
+                  <td>Dieses Flag betrifft nur aeltere cyberJacks
+                  (pinpad und ecom mit der USB-Kennung 0x100). Wenn
+                  dieses Flag gesetzt ist, fuehrt der Treiber ein
+                  Reset durch. Dies sollte normalerweise nicht
+                  noetig sein, kann aber mit manchen Lesern den
+                  Betrieb ueberhaupt erst ermoeglichen.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>Wenn Sie also ein ausfuehrliches Logging einschalten
+          wollen, fuehren Sie das folgende Kommando aus:
+          <kbd class="userinput">&#13; cyberjack addflags
+          0xffff</kbd> Sie sehen hier, dass der angegebene Wert
+          0xffff alle Flags enthaelt, deren Name mit DEBUG_
+          anfaengt.</p>
+
+          <p>Wenn Sie nun zusaetzlich den Cyberjack Ecom/Pinpad
+          ueber den Kernel-Treiber verwenden wollen, koennen Sie
+          dazu entweder anschliessend ein zusaetzliches Kommando
+          eingeben; <kbd class="userinput">&#13; cyberjack addflags
+          0x20000</kbd> oder Sie fuegen das Flag dem ersten Aufruf
+          gleich hinzu, wie in <kbd class="userinput">&#13;
+          cyberjack addflags 0x2ffff</kbd></p>
+        </div>
+
+        <div class="section">
+          <hr>
+
+          <h4 class="section"><a name="AEN479" id="AEN479">10.1.2.
+          Kommando check</a></h4>
+
+          <p>Dieses Kommando wird standardmaessig angenommen, wenn
+          Sie keines angeben.</p>
+
+          <p>Es ueberprueft Ihr System und erzeugt 3 Dateien im
+          aktuellen Verzeichnis:</p>
+
+          <ul>
+            <li>
+              <p><tt class="filename">cyberjack-hints.log</tt>:
+              Diese Datei enthaelt bei gefundenen Problemen
+              Hinweise, wie Sie diese beheben koennen.</p>
+            </li>
+
+            <li>
+              <p><tt class="filename">cyberjack-report.log</tt>:
+              Diese Datei enthaelt einen Bericht ueber die
+              Ergebnisse des Systemtests.</p>
+            </li>
+
+            <li>
+              <p><tt class="filename">cyberjack.xml</tt>: Diese
+              Datei enthaelt die Ergebnisse der Tests in einer
+              Form, die dem Support von Reiner SCT hilft Sie bei
+              Problemen zu unterstuetzen. Sie sollten diese Datei
+              daher immer mitsenden.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

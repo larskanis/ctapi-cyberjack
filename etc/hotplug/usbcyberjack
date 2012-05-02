@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# This script changes the permissions and ownership of the cyberjack USB 
+# device under /proc/bus/usb to grant access to this device to users in the
+# cyberjack group.
+#
+# Ownership is set to root:cyberjack, permissions are set to 0660.
+#
+# Arguments :
+# -----------
+# ACTION=[add|remove]
+# DEVICE=/proc/bus/usb/BBB/DDD
+# TYPE=usb
+
+# special case for SuSE 9.1 with resmgr
+if [ -x /etc/hotplug/usb/desktopdev ] ; then
+	/etc/hotplug/usb/desktopdev $@
+	exit
+fi
+
+# latest hotplug doesn't set DEVICE on 2.6.x kernels
+if [ -z "$DEVICE" ] ; then
+  IF=`echo $DEVPATH | sed 's/\(bus\/usb\/devices\/\)\(.*\)-\(.*\)/\2/'`
+  DEV=`echo $DEVPATH | sed 's/\(bus\/usb\/devices\/\)\(.*\)-\(.*\)/\3/'`
+  DEV=`expr $DEV + 1`
+  DEVICE=`printf '/proc/bus/usb/%.03d/%.03d' $IF $DEV`
+fi
+
+if [ "$ACTION" = "add" -a "$TYPE" = "usb" ]; then
+  chown root:cyberjack "$DEVICE"
+  chmod 0660 "$DEVICE"
+fi
+
+
+# That's an insecure but simple alternative
+# Everyone has access to the reader
+
+# if [ "$ACTION" = "add" -a "$TYPE" = "usb" ]; then
+#  chmod 0666 "$DEVICE"
+# fi
+

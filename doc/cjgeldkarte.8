@@ -1,0 +1,28 @@
+.TH cjgeldkarte 8 "20 April 2010"
+.IX cjgeldkarte
+
+.SH NAME
+cjgeldkarte -- show account balance of a Geldkarte
+
+.SH SYNOPSIS
+cjgeldkarte [-l library] [-p port] [-c count]
+
+.SH DESCRIPTION
+cjgeldkarte prints on success the balance of the GeldKarte
+inserted into the cyberJack chipcard reader.
+
+.SH OPTIONS
+.IP "\fB-l library\fR"
+This can be used to specify, which CT-API library to load. library can be only
+the file name, which is then searched in the LD_LIBRARY_PATH, or it can be the
+full path to a CT-API library. Default value is 'libctapi.so'.
+
+.IP "\fB-p port\fR"
+This is the port number of the reader. Default value is 1.
+
+.IP "\fB-c count\fR"
+Number of consecutive reads, default is 1.
+
+.SH NOTES
+Note: cjgeldkarte does some low-level tests is is therefore not usable with any
+other CT-API library than the library for the cyberJack.

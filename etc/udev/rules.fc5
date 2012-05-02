@@ -1,0 +1,2 @@
+# This is needed for FC5
+ACTION=="add", BUS=="usb", SYSFS{idVendor}=="0c4b", GROUP="cyberjack", MODE="660"

@@ -1,0 +1,705 @@
+Treiber für REINER SCT cyberJack pinpad/e-com USB Kartenleser
+
+Martin Preuss
+
+   Copyright © 2008 REINER SCT GmbH
+
+   2008/02/12
+
+   Dies ist das Handbuch zum Linux-Treiber für die Reiner SCT
+   cyberJack Kartenleser.
+     __________________________________________________________
+
+   Table of Contents
+   1. Übersicht
+   2. Von diesem Treiber unterstützte Geräte
+   3. Distributions-spezifische Hinweise
+
+        3.1. RPM-basiert
+
+              3.1.1. Einrichtung unter SuSE Linux
+
+        3.2. DEB-basiert
+        3.3. Alle anderen Distributionen
+
+   4. Firmware-Update
+   5. Support
+   6. Troubleshooting
+
+        6.1. Erste Schritte
+        6.2. Aeltere cyberJacks
+        6.3. Große Anzahl von Lesern
+        6.4. Hotplugging
+        6.5. Logging
+
+   7. Bekannte Probleme
+   8. Anwendungen
+
+        8.1. Moneyplex
+
+              8.1.1. Moneyplex auf 64-Bit-Systemen
+
+   9. Zusätzliche Information
+
+        9.1. CT-API
+        9.2. PC/SC
+
+              9.2.1. Installation
+
+        9.3. Multithreading
+        9.4. Kommandolaänge
+        9.5. Tastendruck Callback
+        9.6. Informationen zur Treiberversion
+        9.7. Zusaetzliche CT_init Ersatz-Funktion
+        9.8. Feste Zurodnung der Portnummer zu Lesern
+        9.9. Serielle Leser
+        9.10. Zurodnung alter Cyberjack zu ttyUSB-Devices
+        9.11. Pin-Ueberpruefung mit der PC/SC Funktion
+                SCardControl
+
+   10. Mitgelieferte Anwendungen
+
+        10.1. cyberjack
+
+              10.1.1. Kommandos addflags/delflags
+              10.1.2. Kommando check
+
+1. Übersicht
+
+   Dieser Treiber für die Cyberjack Pinpad/ecom-Familie von USB
+   Kartenlesegeräten implementiert den CTAPI Standard in der
+   Version 1.1 sowie das PC/SC-Interface von pcsc-lite.
+
+   Er ist vollständig im Userspace implementiert. Dadurch
+   entfallen Schwierigkeiten mit unterschiedlichen
+   Kernel-Versionen, dem Kompilieren und Patchen von Kerneln etc.
+
+   Sämtliche Zugriffe werden über das usb devfs in /proc/bus/usb
+   (oder /dev/bus/usb für udev-basierte systeme) abgewickelt.
+
+   Behandlung von Dateirechten geschieht ausschließlich über udev.
+   Das Skript cyberjack.rules - falls es nach /etc/udev/rules.d
+   installiert wurde - wird automatisch von udev aufgerufen,
+   sobald der Leser angeschlossen wird. Es setzt die Dateirechte
+   für das entsprechende Gerät, so daß anschliessend die Benutzer
+   der Gruppe cyberjack darauf zugreifen können.
+
+   Für mehr Informationen über den Kartenleser selbst besuchen Sie
+   bitte http://www.reiner-sct.com/. Dort finden Sie auch einen
+   Onlineshop, in dem Sie diesen Leser bestellen können.
+     __________________________________________________________
+
+2. Von diesem Treiber unterstützte Geräte
+
+   Die folgenden Reiner-SCT Kartenleser werden unterstützt:
+
+                Product              ProductID
+   REINER SCT cyberJack pinpad USB   0x100
+   REINER SCT cyberJack e-com USB    0x100
+   REINER SCT cyberJack pinpad_a USB 0x300
+   REINER SCT cyberJack e-com_a USB  0x400
+
+   Mit dem Kommando lsusb können Sie sich alle USB-Geräte anzeigen
+   lassen. Es zeigt die Hersteller- und Gerätekennung aller
+   angeschlossenen Geräte an, beispielsweise:
+
+   Bus Nr  Device Nr     VeID:PrID
+   Bus 002 Device 002 ID 0451:1446
+   Bus 002 Device 006 ID 0c4b:0400
+
+   Die REINER SCT Herstellerkennung ist 0c4b. Die Produktkennungen
+   finden Sie in der vorigen Tabelle.
+     __________________________________________________________
+
+3. Distributions-spezifische Hinweise
+
+   Sie finden alle Pakete unter
+   http://www.reiner-sct.com/content/view/32/43/#linux.
+
+   Die meisten Pakete erzeugen eine Gruppe cyberjack. Dieser
+   Gruppe müssen alle Benutzer zugeordnet werden, die Zugriff auf
+   das Gerät haben sollen. Das erreichen Sie am einfachsten über
+   das KDE-Programm kuser oder das Administrations-Programm Ihres
+   Systems (bei SuSE z.B. yast). Eine Ausnahme stellt hier SuSE
+   10.1 dar, hier müssen Sie keine Benutzer- Zuordnung vornehmen
+   (ab SuSE 10.2 hingegen schon).
+
+   Nach der Installation des Paketes und der Benutzerzuordnung
+   sollten Sie Ihren Rechner neu starten, damit die Änderungen
+   gültig werden.
+     __________________________________________________________
+
+3.1. RPM-basiert
+
+   Reiner-SCT bietet RPM-Pakete für die folgenden Distributionen
+   an:
+
+     * SuSE 10.3
+     * SuSE 10.2
+     * SuSE 10.1
+     * SuSE 10.0
+     * Fedora Core 7
+     * Fedora Core 6
+     * Fedora Core 5
+
+   Installieren Sie das entsprechende Paket einfach durch das
+   folgende Kommando: rpm -i <Paketdatei>
+
+   Sollten Sie bereits ein älteres Treiberpaket installiert haben,
+   verwenden Sie stattdessen das folgende Kommando: rpm -U
+   <Paketdatei>
+
+   Es gibt allerdings eine Besonderheit bei Verwendung von
+   SuSE10.0 auf einem 64-Bit-System mit der Anwendung "Moneyplex":
+   Da diese Anwendung leider eine 32-Bit-Anwendung ist, kann sie
+   nur mit der 32-Bit-Version unseres Treibers arbeiten. Leider
+   war der Kernel von SuSE10.0 noch nicht in der Lage, alle
+   32-Bit-Aufrufe des Treibers nach 64-Bit umzuwandeln. Hier muss
+   daher eine Aenderung an der Datei /etc/cyberjack.conf
+   vorgenommen werden. Fuegen Sie bitte die folgende Zeile ein:
+   "flags=0x20000".
+     __________________________________________________________
+
+3.1.1. Einrichtung unter SuSE Linux
+
+   Nach der Installation des Treibers muessen Sie die Benutzer,
+   die auf den Leser zugreifen koennen sollen, in die Gruppe
+   "cyberjack" einfuegen.
+
+   Am einfachsten geschieht dies mit Yast: Starten Sie Yast, rufen
+   Sie das Menu "Sicherheit und Benutzer" auf und dort "Gruppen
+   bearbeiten und anlegen".
+
+   Es erscheint ein Fenster, das standardmaessig die Systemgruppen
+   nicht anzeigt, daher muessen Sie den Filter aendern. Klicken
+   Sie dazu unten rechts auf "Filter festlegen" und waehlen Sie
+   dort "Systemgruppen". Daraufhin sollten Sie in der Liste auch
+   die Gruppe "cyberjack" finden, die Sie dann markieren muessen.
+   Anschliessend klicken Sie unten auf "Bearbeiten".
+
+   In dem Fenster, welches dann erscheint, setzen Sie bei den
+   aufgefuehrten Benutzern, die auf den Leser zugreifen koennen
+   sollen, die Markierung.
+
+   Klicken Sie nun auf "Uebernehmen" und starten Sie das System
+   neu, Der Leser sollte nun fuer die markierten Benutzer
+   verwendbar sein.
+     __________________________________________________________
+
+3.2. DEB-basiert
+
+   Reiner-SCT bietet DEB-Pakete für die folgenden Distributionen:
+
+     * Debian stable
+     * Debian unstable
+     * Ubuntu 6.10
+     * Ubuntu 7.04
+     * Ubuntu 7.10
+
+   Installieren Sie das entsprechende Paket mit: dpkg -i
+   <Paketdatei>
+     __________________________________________________________
+
+3.3. Alle anderen Distributionen
+
+   Es gibt momentan wenig Erfahrungen mit anderen
+   Linux-Distributionen. Haben Sie ein RPM-basiertes System, so
+   können Sie probieren eigene RPM-Paket zu erstellen: rpm
+   --rebuild <Quellpaketdatei> oder rpmbuild --rebuild
+   <Quellpaketdatei>
+
+   Falls Sie den Treiber selber kompilieren wollen, wechseln Sie
+   in das Hauptverzeichnis des entpackten Treiber-Paketes und
+   geben Sie die folgenden Befehle ein: ./configure make
+
+   Anschließend können Sie den Treiber auf Ihr System
+   installieren. Dazu benötigen Sie sehr wahrscheinlich
+   Administrator-Rechte. make install
+     __________________________________________________________
+
+4. Firmware-Update
+
+   Die aktuelle Version dieses Treibers enthaelt das Tool
+   "cjflash" welches das Aktualisieren der Firmware des Lesers
+   erlaubt.
+
+   Derzeit koennen damit allerdings nur die neuesten
+   Cyberjack-Leser aktualisiert werden (mit der Produkt-Kennung
+   0x400)
+
+   Der Linux-Treiber funktioniert mit diesen Geraeten nur mit
+   einer Firmware in der Version groesser oder gleich 3.0.6.
+   Sollte Ihr Leser eine aeltere Version enthalten, ist ein Update
+   zwingend noetig. Auch nach diesem Update funktioniert der Leser
+   weiterhin auch unter Windows.
+
+   Um die Firmware zu aktualiseren geben Sie bitte das folgenden
+   Kommando in einer Konsole ein: cjflash 1 Kernel_V30_07.bin
+   Kernel_V30_07.bin.ecoma.sgn ecoma2.bky
+
+   Das erste Argument ist die Nummer des Lesers (beginnend mit
+   "1", der 2. Leser hat die Nummer "2" etc). Das naechste
+   Argument ist der Name der Datei mit der neuen Firmware gefolgt
+   vom Namen der Datei mit der Signatur der neuen Firmware.
+
+   Nachdem Sie das Kommando eingegeben haben fragt der Leser nach
+   einer Bestaetigung. Druecken Sie die "OK"-Taste auf der
+   Tastatur des Lesers zur Bestaetigung oder brechen Sie den
+   Vorgang mit "CANCEL" ab.
+
+   Sollte der Leser "haengen" nachdem Sie "OK" oder "CANCEL"
+   gedrueckt haben, muessen Sie den Leser abziehen und neu
+   anschliessen. Anschliessend muessen Sie eine leicht
+   modifizierte Version des obrigen Kommandos verwenden:
+   CJ_USB_MODE=1 cjflash 1 Kernel_V30_07.bin
+   Kernel_V30_07.bin.ecoma.sgn
+
+   Hiermit wird die Umgebungsvariable "CJ_USB_MODE" gesetzt bevor
+   das Update durchgefuehrt wird. Dadurch weiss der Treiber, dass
+   es sich um einen Leser mit einer fuer Linux problematischen
+   Firmware handelt und spricht ihn etwas anders an.
+
+   Bitte setzen Sie die Umgebungsvariable nur, wenn "cjflash"
+   sonst nicht funktioniert!
+     __________________________________________________________
+
+5. Support
+
+   Support für diesen Treiber bietet REINER SCT. E-mail:
+   support@reiner-sct.com Postadresse: Schwabacher Str. 34, 90762
+   Fürth, Deutschland
+
+   Bitte fügen Sie ihrer Problembeschreibung die folgenden
+   Informationen bei:
+
+     * Name und Version des verwendeten Programmes, mit dem der
+       Fehler auftrat
+     * die vollständige Fehlermeldung
+     * den Namen und die Version der von Ihnen verwendeten
+       Linux-Distribution (z.B. SuSE 10.1, Debian 3.0r1 testing)
+     * CPU-Typ (z.B. der Inhalt der Datei /proc/cpuinfo)
+     * Kernelversion (z.B. die Ausgabe des Befehls uname -r)
+     * Liste der angeschlossenen USB-Geräte (z.B. die Ausgabe des
+       Befehls lsusb)
+     __________________________________________________________
+
+6. Troubleshooting
+
+6.1. Erste Schritte
+
+   Mit dem Treiber wird das Tool "cyberjack" installiert. Es
+   erzeugt Dateien mit Daten, die fuer den Support von Reiner SCT
+   wichtig sind. Fuehren Sie daher in einer Konsole den folgenden
+   Befehl aus; cyberjack
+
+   Dabei entstehen im aktuellen Verzeichnis 3 Dateien. Schauen Sie
+   sich zuerst die Datei cyberjack-hints.log an. Sie enthaelt
+   eventuell bereits Hinweise, was Sie auf Ihrem System tun
+   koennen, um das Problem selbst zu beheben (oft sind es nur
+   Kleinigkeiten).
+
+   Sollte das nicht zum Erfolg fuehren, senden Sie bitte die
+   ebenfalls entstandene Datei "cyberjack.xml" mit Ihrer
+   Support-Anfrage mit, damit wir alle noetigen Informationen
+   haben, um Ihnen helfen zu koennen.
+     __________________________________________________________
+
+6.2. Aeltere cyberJacks
+
+   cyberJacks mit der USB-Kennung 0x100 (alte Ecom/Pinpad) machen
+   mitunter Probleme mit aktuellen Treibern.
+
+   Falls das bei Ihnen der Fall sein sollte, gibt es die
+   Moeglichkeit, das Verhalten des Treibers zu beeinflussen:
+
+   cyberjack addflags 0x100000
+
+   Dieses Kommando muessen Sie als root ausfuehren. Es setzt ein
+   Flag welches den Treiber bei jedem Initialisieren des Lesers
+   ein Reset-Kommando schicken laesst.
+     __________________________________________________________
+
+6.3. Große Anzahl von Lesern
+
+   Der cyberJack wurde mit bis zu 52 gleichzeitig angeschlossenen
+   Geräten (über 7-Port Hubs) getestet. Dabei gibt es allerdings
+   etwas zu beachten:
+
+     * Linux bis Version 2.4.19 hängt sich vollständig auf, wenn
+       zu viele Geräte angeschlossen sind. Versionen ab 2.4.20
+       weisen dieses Problem nicht mehr auf.
+     * Es treten manchmal timeout-Fehler auf. Das Problem scheint
+       hier im Linux-Kernel selbst zu liegen (usb-uhci). Mit
+       schnelleren Rechnern tritt dieses Problem nicht mehr auf
+       (ab 2GHz).
+     * Sollte es immer noch nicht wie gewünscht funktionieren,
+       sollten Sie die beteiligten USB-Controller-Karten und/oder
+       Hubs austauschen. Es gibt hier offensichtlich eine
+       besonders große Streubreite in der Qualität dieser Geräte.
+
+   Der Daten-Durchsatz nimmt nicht ab, wenn Sie statt einem 50
+   Kartenleser anschließen und konstant auslesen (getestet mit den
+   Kommandos SELECT und READ_BINARY).
+     __________________________________________________________
+
+6.4. Hotplugging
+
+   Linux unterstützt hotplugging (das Einstecken und Entfernen von
+   USB-Geräten bei laufendem Betrieb). Dies wird durch das
+   udev-System implementiert.
+
+   Sie finden udev-Skriptdateien für die REINER SCT Kartenleser im
+   Verzeichnis etc/udev des Quellpaketes.
+
+   Da udev-Skripte Distributions-spezifisch sind (nicht alle
+   verwenden udev, und SuSE verwendet ausserdem resmgr, zudem sind
+   auch die Namen der Skripte nicht einheitlich), können wir nicht
+   für alle am Markt existierenden Distributionen die passenden
+   Skripte bereitstellen. Die von uns gelieferten RPM- und
+   DEB-Pakete installieren die für das jeweilige System passenden
+   Dateien an die vorgesehene Stelle, so daß mit diesen Paketen
+   hotplugging problemlos möglich ist.
+     __________________________________________________________
+
+6.5. Logging
+
+   Dieser Treiber erlaubt die Aufzeichnung der Kommunikation mit
+   dem Kartenleser. Sie schalten es ein, indem Sie als root das
+   Kommando cyberjack addflags 0xffff ausfuehren. Dann schreibt
+   der Treiber die Logmeldungen in die Datei /tmp/cj.log.
+     __________________________________________________________
+
+7. Bekannte Probleme
+
+   Leider enthalten alle Kernel bi einschliesslich Version
+   2.6.12-rc5 einen schweren Fehler in der Behandlung von
+   asynchronen URB's (USB Request Block) im Userspace. Dieser
+   Fehler hat nichts mit dem Reiner SCT Treiber zu tun, dennoch
+   betrifft er auch unseren Treiber für PC/SC. Der Fehler tritt
+   auf, wenn der PC/SC Dienst beendet wird und kann im schlimmsten
+   Fall zum vollständigen Absturz des Kernels führen.
+
+   Es wurde eine Lösung erarbeitet, die aber bisher nicht
+   offizieller Bestandteil des Linux-Kernels ist. Wir bieten
+   unsere Lösung aber als patch an (in Form der Datei
+   patches/usb-async_urb-devio-oops-fix.patch).
+
+   Falls Sie PC/SC in Verbindung mit einem betroffenen Kernel
+   verwenden wollen, raten wir daher dringend dazu den
+   mitgelieferten Patch anzuwenden.
+     __________________________________________________________
+
+8. Anwendungen
+
+8.1. Moneyplex
+
+   Moneyplex bringt seine eigenen Treiber fuer die bekanntesten
+   Geraete mit. Leider sind die Treiber fuer den Cyberjack, die
+   sich auf der Moneyplex-CD befinden, meist veraltet und
+   funktionieren auf aktuellen Systemen nicht.
+
+   Sie sollten daher unbedingt den jeweils aktuellsten Treiber von
+   unserer Homepage herunterladen und installieren.
+
+   Anschliessend muessen Sie dann im entsprechenden
+   Konfigurationsmenue von Moneyplex direkt unseren Treiber
+   angeben (je nach System entweder in /usr/lib oder in
+   /usr/lib/readers, Dateiname ist "libctapi-cyberjack.so".
+
+   Damit sollte Moneyplex auch mit dem Cyberjack zusammenarbeiten
+   koennen.
+     __________________________________________________________
+
+8.1.1. Moneyplex auf 64-Bit-Systemen
+
+   Moneyplex ist eine 32-Bit-Anwendung. Als solche kann sie zwar
+   auch auf 64-Bit-Systemen ausgefuehrt werden, findet aber auf
+   solchen Systemen keine Kartenleser-Treiber (weil es nach
+   32-Bit-Treibern sucht, die aber auf einem solchen System
+   normalerweise nicht vorhanden sind).
+
+   Es wurde allerdings auch fuer diesen Fall eine Loesung mit
+   Matrica erarbeitet. Moneyplex liefert - spaetestens nach einem
+   Update - einen Proxy-Treiber mit (libproxy-cyberjack.so),
+   welcher einer 32-Bit-Anwendung erlaubt, auf die installierten
+   64-Bit-Treiber zuzugreifen.
+
+   Diesen Treiber finden Sie normalerweise im
+   Moneyplex-Verzeichnis ($HOME/moneyplex), und dort
+   ueblicherweise im Unterverzeichnis "ctapi". Waehlen Sie diesen
+   Treiber in Moneyplex aus.
+     __________________________________________________________
+
+9. Zusätzliche Information
+
+9.1. CT-API
+
+   Die CT-API Spezifikation erhalten Sie auf der Seite
+   http://www.darmstadt.gmd.de/~eckstein/CT/mkt.html
+
+   Bitte beachten Sie, daß die Port-Nummern bei 1 beginnen (wie in
+   den Spezifikationen vorgesehen).
+     __________________________________________________________
+
+9.2. PC/SC
+
+   Dieser Treiber bietet inzwischen auch einen PC/SC-Treiber für
+   pcsc-lite an. Er wurde mit pcsc-lite-1.2.0 getestet.
+     __________________________________________________________
+
+9.2.1. Installation
+
+   Für RPM-basierte Systeme ist der sogenannte IFD-Treiber im
+   Paket ctapi-cyberjack-ifd enthalten.
+
+   Falls Sie den Treiber aus dem Quellpaket selber kompilieren,
+   wird durch make install der IFD-Treiber an die passende Stelle
+   in Ihrem System (normalerweise /usr/lib/pcsc/drivers/)
+   installiert.
+     __________________________________________________________
+
+9.3. Multithreading
+
+   Dieser Treiber ist nicht thread-safe, d.h. es können nicht
+   mehrere Threads des gleichen Programmes auf den gleichen Leser
+   zugreifen (dies würde aber ohnehin meist zu Problemen auf der
+   Karte führen).
+
+   Allerdings können unterschiedliche Threads des gleichen
+   Programmes auf unterschiedliche Geräte zugreifen. So können
+   also beispielsweise 3 Threads gleichzeitig auf 3 Karten in 3
+   unterschiedlichen Geräten zugreifen.
+     __________________________________________________________
+
+9.4. Kommandolaänge
+
+   Die Kommandolänge ist derzeit auf ISO7816 short commands
+   reduziert. Dies bedeutet allerdings im normalen Betrieb keine
+   Einschränkung.
+     __________________________________________________________
+
+9.5. Tastendruck Callback
+
+   IS8 rsct_setkeycb(IU16ctn, void (*cb) (void *user_data));
+
+   Die Funktion rsct_setkeycb wurde hinzugefügt, um laufenden
+   Programmen eine Rückmeldung über gedrückte Tasten des Lesers zu
+   geben. Die Funktion, die als 2. Argument dieses Aufrufes
+   geliefert wird, wird jeweils aufgerufen, wenn ein C4- oder F4
+   S-Block vom Leser empfangen wurde. Die Anwendung kann dann
+   beispielsweise einen Piepton erzeugen, oder die Anzahl der
+   gedrückten Tasten anzeigen.
+     __________________________________________________________
+
+9.6. Informationen zur Treiberversion
+
+   void rsct_version(IU8*vmajor, IU8*vminor, IU8*vpatchlevel,
+   IU16*vbuild);
+
+   Die Funktion rsct_version gibt die vollstaendige Version des
+   Treibers in den uebergebenen Variablen zurueck.
+     __________________________________________________________
+
+9.7. Zusaetzliche CT_init Ersatz-Funktion
+
+   IS8 rsct_init_name(IU16ctn, const char*device_name);
+
+   Die Funktion rsct_init_name erlaubt die direkte Angabe des
+   Geraetes wie bei PC/SC. Damit kann eindeutig festgelegt werden,
+   welches Geraet verwendet werden soll. Der Geraetename ist wie
+   folgt aufgebaut:
+   "usb:VENDOR_ID/PRODUCT_ID:libusb:BUS_ID:DEVICE_ID". Fuer einen
+   neuen Cyberjack an /proc/bus/usb/003/002 lautet der Name
+   demnach: "usb:0c4b/0300:libusb:003:002".
+     __________________________________________________________
+
+9.8. Feste Zurodnung der Portnummer zu Lesern
+
+   Die Funktion CT_init erlaubt eine feste Zurdnung von
+   Portnummern zu bestimmten Lesern. Das bedeutet beispielsweise,
+   dass immer der gleiche Leser unter der gleichen Portnummer
+   angesprochen wird, egal an welchem USB-Port das Geraet
+   angeschlossen ist.
+
+   Dies erreichen Sie, indem Sie als Portnummer die folgenden
+   Nummern verwenden:
+
+     * 0x9000 (dezimal 36864) fuer das erste Geraet
+     * 0x9001 (dezimal 36865) fuer das zweite Geraet
+
+   und so weiter.
+
+   Die Zuordnung geschieht ueber eine Text-Datei, in der pro Zeile
+   eine Seriennummer gespeichert ist (normalerweise ist dies
+   $HOME/cyberjack_serials).
+
+   Der Treiber aktualisiert diese Datei selbststaendig, es ist
+   hierzu kein Benutzereingriff noetig. Falls die Datei beim
+   Aufruf von CT_init() noch nicht existiert, wird sie erzeugt.
+   Wenn sie bereits existiert, und der angeschlossene Leser
+   bereits in dieser Datei aufgefuehrt wird, bleibt die Datei
+   unveraendert. Der Treiber fuegt lediglich neue Leser an das
+   Ende der Datei an.
+
+   Die erste Seriennummer dieser Datei wird ueber den Portwert
+   0x9000 angesprochen, die zweite ueber 0x9001 etc.
+     __________________________________________________________
+
+9.9. Serielle Leser
+
+   Der aktuelle Treiber unterstuetzt den Lesertyp Ecom A via
+   seriellem Anschluss.
+
+   Dazu muessen Sie die folgenden Portnummern verwenden:
+
+     * 0xa000 (dezimal 40960) fuer Anschluß an COM1 (/dev/ttyS0)
+     * 0xa001 (dezimal 40961) fuer Anschluß an COM2 (/dev/ttyS1)
+
+   und so weiter.
+     __________________________________________________________
+
+9.10. Zurodnung alter Cyberjack zu ttyUSB-Devices
+
+   Die Funktion CT_init erlaubt fuer aeltere Cyberjack Ecoms und
+   PinPads (mit der USB-Id 0x100) eine direkte Zurodnung von
+   Port-Werten zu /dev/ttyUSBx-Geraeten.
+
+   Dies erreichen Sie, indem Sie als Portnummer die folgenden
+   Nummern verwenden:
+
+     * 0x8000 (dezimal 32768) fuer /dev/ttyUSB0
+     * 0x8001 (dezimal 32769) fuer /dev/ttyUSB1
+
+   und so weiter.
+     __________________________________________________________
+
+9.11. Pin-Ueberpruefung mit der PC/SC Funktion SCardControl
+
+   Die folgende Tabelle zeigt Werte fuer die einzelnden Felder der
+   Struktur PSCS_VERIFY_STRUCTURE die mit ASCII und
+   FPIN2-kodierten Pins getestet wurden.
+
+             Feld            ASCII FPIN2
+   bTimerOut                 00    00
+   bTimerOut2                00    00
+   bmFormatString            82    81
+   bmPINBlockString          04    48
+   bmPINLengthFormat         00    04
+   wPINMaxExtraDigit         0408  0408
+   bEntryValidationCondition 02    02
+   bNumberMessage            01    01
+   wLangId                   0904  0904
+   bMsgIndex                 00    00
+   bTeoPrologue 0-2          00    00
+     __________________________________________________________
+
+10. Mitgelieferte Anwendungen
+
+10.1. cyberjack
+
+   Diese Anwendung dient zum einen dem Testen des Treibers und
+   Lesers zum anderen der Aenderung von Einstellungen des
+   Treibers.
+
+   Die Einstellungen des Treibers finden sich in der
+   Konfigurationsdatei cyberjack.conf. Es wird je nach
+   Distribution in dem Verzeichnis /etc, /etc/cyberjack oder
+   /usr/etc erwartet.
+
+   Standardmaessig wird von den binaeren Paketen eine
+   Beispieldatei mit dem Namen cyberjack.conf.default angelegt die
+   als Ausgangsdatei fuer eigene Konfigurationen verwendet werden
+   kann.
+
+   Gespeicherte Einstellungen beinhalten derzeit eine Reihe von
+   Flags sowie einige Dateinamen (wie z.B. der Name der Logdatei
+   etc).
+     __________________________________________________________
+
+10.1.1. Kommandos addflags/delflags
+
+   Da die Konfiguration je nach Distribution an unterschiedlichen
+   Stellen im System abgelegt wird wurde das Tool "cyberjack" um
+   zwei neue Kommandos erweitert:
+
+     * cyberjack addflags 0xffff
+     * cyberjack delflags 0xffff
+
+   Damit koennen bestimmte Flags gesetzt oder geloescht werden.
+   Derzeit stehen die folgenden Flags zur Verfuegung:
+
+   Wert Name Beschreibung
+   0x00000001 DEBUG_GENERIC Schaltet generelle Debug-Meldungen
+   ein. Diese Meldungen werden in die Logdatei geschrieben
+   (normalerweise /tmp/cj.log).
+   0x00000002 DEBUG_READER Schaltet Leser-bezogene Debug-Meldungen
+   ein.
+   0x00000004 DEBUG_CTAPI Schaltet CTAPI-bezogene Debug-Meldungen
+   ein.
+   0x00000008 DEBUG_AUSB Schaltet USB-bezogene Debug-Meldungen
+   ein.
+   0x00000010 DEBUG_CJPPA Schaltet bestimmte Debug-Meldungen des
+   Cyberjack PinPad A ein.
+   0x00000020 DEBUG_ECOM Schaltet bestimmte Debug-Meldungen des
+   Cyberjack Ecom ein.
+   0x00000040 DEBUG_TRANSFER Schaltet IO-bezogene Debug-Meldungen
+   ein.
+   0x00000080 DEBUG_USB Schaltet weitere USB-bezogene
+   Debug-Meldungen ein.
+   0x00000100 DEBUG_IFD Schaltet IFD-bezogene Debug-Meldungen ein
+   (PC/SC)
+   0x00000200 DEBUG_ECA Schaltet bestimmte Debug-Meldungen des
+   Cyberjack Ecom A ein.
+   0x00001000 NO_BEEP Schaltet die Signaltoene bei Tastendruecken
+   aus.
+   0x00002000 ECOM_KERNEL Verwendet den Kernel-Treiber fuer den
+   Cyberjack Ecom/Pinpad mit der USB ID 0x100. Dies kann verwendet
+   werden, wenn der normale Userspace-Treiber auf Ihrem System
+   nicht funktioniert.
+   0x00004000 ALLOW_INPUT Erlaubt das Kommando INPUT. Dies ist
+   normalerweise aus Sicherheitsgruenden deaktiviert. Nur ganz
+   spezielle Anwendungen benoetigen dieses Kommando, insbesondere
+   Banking-Programme benoetigen es jedoch nicht. Sie sollten sich
+   daher gut ueberlegen, ob Sie das Kommando aktivieren wollen,
+   denn es kann dazu verwendet werden, Ihnen eine unsichere
+   Pin-Eingabe als sicher vorzutaeuschen.
+   0x00008000 BEEP_NO_X11 Normalerweise versucht der Treiber fuer
+   die Signaltoene auf einen laufenden X11-Server zuzugreifen
+   (Ihre grafische Oberflaeche). Wenn dies nicht gelingt, wird
+   versucht die Signaltoene ueber andere Methoden zu erzeugen. Mit
+   diesem Flag koennen Sie verhindern, dass der X11-Server
+   kontaktiert wird.
+   0x00010000 RESET_BEFORE Dieses Flag betrifft nur aeltere
+   cyberJacks (pinpad und ecom mit der USB-Kennung 0x100). Wenn
+   dieses Flag gesetzt ist, fuehrt der Treiber ein Reset durch.
+   Dies sollte normalerweise nicht noetig sein, kann aber mit
+   manchen Lesern den Betrieb ueberhaupt erst ermoeglichen.
+
+   Wenn Sie also ein ausfuehrliches Logging einschalten wollen,
+   fuehren Sie das folgende Kommando aus: cyberjack addflags
+   0xffff Sie sehen hier, dass der angegebene Wert 0xffff alle
+   Flags enthaelt, deren Name mit DEBUG_ anfaengt.
+
+   Wenn Sie nun zusaetzlich den Cyberjack Ecom/Pinpad ueber den
+   Kernel-Treiber verwenden wollen, koennen Sie dazu entweder
+   anschliessend ein zusaetzliches Kommando eingeben; cyberjack
+   addflags 0x20000 oder Sie fuegen das Flag dem ersten Aufruf
+   gleich hinzu, wie in cyberjack addflags 0x2ffff
+     __________________________________________________________
+
+10.1.2. Kommando check
+
+   Dieses Kommando wird standardmaessig angenommen, wenn Sie
+   keines angeben.
+
+   Es ueberprueft Ihr System und erzeugt 3 Dateien im aktuellen
+   Verzeichnis:
+
+     * cyberjack-hints.log: Diese Datei enthaelt bei gefundenen
+       Problemen Hinweise, wie Sie diese beheben koennen.
+     * cyberjack-report.log: Diese Datei enthaelt einen Bericht
+       ueber die Ergebnisse des Systemtests.
+     * cyberjack.xml: Diese Datei enthaelt die Ergebnisse der
+       Tests in einer Form, die dem Support von Reiner SCT hilft
+       Sie bei Problemen zu unterstuetzen. Sie sollten diese Datei
+       daher immer mitsenden.

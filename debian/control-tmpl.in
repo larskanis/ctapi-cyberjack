@@ -1,0 +1,55 @@
+Source: ctapi-cyberjack@CYBERJACK_SO_EFFECTIVE@
+Section: misc
+Priority: optional
+Maintainer: Martin Preuss <martin@libchipcard.de>
+Build-Depends: debhelper (>= 4), autotools-dev, libhal-dev, libusb-dev, libfox-1.6-dev, libpcsclite-dev
+Standards-Version: 3.7.2
+
+Package: libctapi-cyberjack@CYBERJACK_SO_EFFECTIVE@
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends:
+Description: REINER SCT cyberJack pinpad/e-com/e-com-A USB user space driver
+ This package includes the CT-API driver for the cyberJack pinpad/e-com/e-com-A
+ USB chipcard reader.
+ .
+ This package changes the permissions of the device to grant access to users of
+ the group "cyberjack".
+ Therefore you should add all users which are to access the reader to the
+ group "cyberjack".
+ .
+ If you run into problems you should start the tool "cyberjack" in a console
+ and watch its output.
+ .
+ For more information regarding installation under Linux see the README.txt
+ in the documentation directory, esp. regarding compatibility with host
+ controllers.
+ .
+ For more information about the reader, software updates and a shop see
+ http://www.reiner-sct.com/
+
+
+Package: libifd-cyberjack@CYBERJACK_SO_EFFECTIVE@
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: pcscd
+Conflicts: ifd-cyberjack2
+Description: IFD driver for Reiner SCT Cyberjack and PC/SC
+ This packages contains the IFD handler which is needed by PC/SC to access
+ the reader.
+
+Package: fxcyberjack
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: libctapi-cyberjack@CYBERJACK_SO_EFFECTIVE@
+Description: Graphical diagnostics and maintenance tool for Reiner SCT Cyberjacks
+ This packages contains the graphical tool which allows to diagnose typical driver
+ setup problems. It is also able to flash new software to current cyberJack readers.
+ 
+Package: cyberjack-gui
+Architecture: any
+Depends: ${shlibs:Depends}
+Recommends: libctapi-cyberjack@CYBERJACK_SO_EFFECTIVE@
+Description: Graphical pin dialog for Reiner SCT Cyberjacks
+ This package contains a graphical helper tool which displays a pin dialog when
+ necessary.

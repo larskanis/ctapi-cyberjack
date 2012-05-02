@@ -1,0 +1,160 @@
+
+%define PACK_VER 1
+
+%define dist 
+%define disttag 
+%define distver     
+
+%define readers_dir %{_libdir}/readers
+
+# set this to 1 for hotplug-only systems (like FC4)
+%define use_hotplug 0
+%define use_udev 0
+
+
+Name:		ctapi-cyberjack
+Summary:	CT-API 1.1 driver for REINER SCT cyberjack USB chipcard reader
+Version:	3.3.6
+Release:        %{PACK_VER}.%{disttag}%{distver}
+License: 	LGPL
+Packager:       Martin Preuss <martin@libchipcard.de>
+URL:            http://www.reiner-sct.de/
+Group: 		System Environment/Libraries
+Source: 	%{name}-%{version}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-root
+Requires:	udev
+# BuildRequires:
+Prereq:         /sbin/ldconfig
+
+
+%package ifd
+Summary:	cyberjack PC/SC IFD handler for pcsc-lite
+Requires:	%{name} = %{version}
+Group:		System Environment/Libraries
+Conflicts:	pcsc-cyberjack
+
+%description ifd
+REINER SCT cyberJack pinpad/e-com USB user space driver
+
+This package includes the PC/SC IFD handler driver for the CyberJack
+ecom_a USB chipcard reader.
+
+
+%package gui
+Summary:	Graphical Diagnostic Tool
+Requires:	%{name} = %{version}
+Group:		System Environment/Libraries
+
+%description gui
+Graphical diagnostic tool for Reiner SCT cyberJack card readers.
+
+This package contains a graphical tool which lists all connected 
+Reiner SCT readers and allows flashing E-Com A and newer readers.
+
+It can also be used to diagnose most frequent problems in the reader-/driver
+setup.
+
+
+%description
+REINER SCT cyberJack pinpad/e-com USB user space driver
+
+This package includes the CT-API driver for the CyberJack USB chipcard reader.
+
+This package changes the permissions of the device to grant access to users of
+the group "cyberjack".
+
+Therefore you should add all users which are to access the reader to the
+group "cyberjack".
+
+If you run into problems you should start the tool "cyberjack" in a console
+and watch its output.
+
+For more information regarding installation under Linux see the README.txt
+in the documentation directory, esp. regarding compatibility with host
+controllers.
+
+For more information about the reader, software updates and a shop see
+http://www.reiner-sct.com/
+
+%prep
+%setup -q
+
+%build
+%configure --disable-static --sysconfdir="%{_sysconfdir}" --with-usbdropdir="%{_libdir}/readers"
+make
+
+%install
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+test -d $RPM_BUILD_ROOT/%{readers_dir} || mkdir $RPM_BUILD_ROOT/%{readers_dir}
+cp $RPM_BUILD_ROOT/%{_libdir}/libctapi-cyberjack.so $RPM_BUILD_ROOT/%{readers_dir}
+cp $RPM_BUILD_ROOT/%{_libdir}/libctapi-cyberjack.so.* $RPM_BUILD_ROOT/%{readers_dir}
+rm $RPM_BUILD_ROOT/%{_libdir}/libctapi-cyberjack.la
+rm $RPM_BUILD_ROOT/%{_libdir}/readers/libifd-cyberjack.bundle/Contents/Linux/libifd-cyberjack.la
+
+%clean
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+
+%pre
+groupadd -r cyberjack 2>/dev/null || :
+
+%files
+%defattr(0644,root,root)
+
+%doc COPYRIGHT.GPL COPYRIGHT.LGPL doc/README.txt doc/LIESMICH.txt
+
+# hotplug (not needed for newer systems)
+#%attr(0755,root,root) %{_sysconfdir}/hotplug.d/usb/usbcyberjack
+#%{_sysconfdir}/hotplug/usb/cyberjack.usermap
+
+# CT-API
+%{readers_dir}/libctapi-cyberjack.so
+%{readers_dir}/libctapi-cyberjack.so.*
+%{_libdir}/libctapi-cyberjack.so
+%{_libdir}/libctapi-cyberjack.so.*
+#%{_libdir}/libcyberjack.so
+#%{_libdir}/libcyberjack.so.*
+%attr(0755,root,root) %{_bindir}/cjflash
+%attr(0755,root,root) %{_bindir}/cjgeldkarte
+%attr(0755,root,root) %{_bindir}/cyberjack
+%attr(0755,root,root) %{_libdir}/cyberjack/getdist.sh
+
+%{_mandir}*
+
+%if %use_hotplug
+%attr(0755,root,root) %{_sysconfdir}/hotplug/usb/usbcyberjack
+%{_sysconfdir}/hotplug/usb/cyberjack.usermap
+%else
+%{_sysconfdir}/*
+%endif
+
+%if %use_udev
+%attr(0755,root,root) /sbin/udev.cyberjack.sh
+%endif
+
+
+# PC/SC
+%files ifd
+%{_libdir}/readers/libifd-cyberjack.bundle/*
+
+#%files devel
+%defattr(0644,root,root)
+#%{_includedir}/ctapi.h
+
+%files gui
+%attr(0755,root,root) %{_bindir}/fxcyberjack
+%attr(0755,root,root) %{_bindir}/cyberjack-gui
+
+
+%changelog -n ctapi-cyberjack
+* Wed May 02 2007 - Martin Preuss <martin@libchipcard.de>
++ ctapi-cyberjack-3.0.0beta1-1
+- modified specfile to create RPMs for any RPM-based system
+- now uses autotools
+

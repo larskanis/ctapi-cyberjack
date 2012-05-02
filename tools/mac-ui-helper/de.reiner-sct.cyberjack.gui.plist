@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeepAlive</key>
+	<true/>
+	<key>LimitLoadToSessionType</key>
+	<string>Aqua</string>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>Label</key>
+	<string>de.reiner-sct.cyberjack.ui</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Library/Frameworks/CyberJack_CTAPI.framework/Versions/Current/Resources/CyberJack UI Agent.app/Contents/MacOS/CyberJack UI Agent</string>
+	</array>
+</dict>
+</plist>

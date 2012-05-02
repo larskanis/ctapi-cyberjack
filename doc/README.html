@@ -1,0 +1,874 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 6 November 2007), see www.w3.org">
+
+  <title>REINER SCT cyberJack pinpad/e-com USB chipcard reader
+  driver</title>
+  <meta name="GENERATOR" content=
+  "Modular DocBook HTML Stylesheet Version 1.79">
+</head>
+
+<body class="article" bgcolor="#FFFFFF" text="#000000" link=
+"#0000FF" vlink="#840084" alink="#0000FF">
+  <div class="ARTICLE">
+    <div class="TITLEPAGE">
+      <h1 class="title"><a name="AEN2" id="AEN2">REINER SCT
+      cyberJack pinpad/e-com USB chipcard reader driver</a></h1>
+
+      <div class="authorgroup">
+        <a name="AEN4" id="AEN4"></a>
+
+        <h3 class="author"><a name="AEN5" id="AEN5">Matthias
+        Br&uuml;stle</a></h3>
+
+        <h3 class="author"><a name="AEN8" id="AEN8">Harald
+        Welte</a></h3>
+
+        <h3 class="author"><a name="AEN11" id="AEN11">Martin
+        Preuss</a></h3>
+      </div>
+
+      <p class="copyright">Copyright &copy; 2004 REINER SCT
+      GmbH</p>
+
+      <p class="pubdate">$Date$<br></p>
+
+      <div>
+        <div class="abstract">
+          <a name="AEN18" id="AEN18"></a>
+
+          <p>This is the user manual to the linux driver for REINER
+          SCT cyberjack chipcard readers.</p>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="TOC">
+      <dl>
+        <dt><b>Table of Contents</b></dt>
+
+        <dt>1. <a href="#AEN20">Overview</a></dt>
+
+        <dt>2. <a href="#AEN35">Readers supported by this
+        driver</a></dt>
+
+        <dt>3. <a href="#AEN59">distribution-specific
+        notes</a></dt>
+
+        <dd>
+          <dl>
+            <dt>3.1. <a href="#AEN69">RPM-based</a></dt>
+
+            <dt>3.2. <a href="#AEN89">DEB-based</a></dt>
+
+            <dt>3.3. <a href="#AEN101">All other
+            Distributions</a></dt>
+          </dl>
+        </dd>
+
+        <dt>4. <a href="#AEN118">Updating the Firmware</a></dt>
+
+        <dt>5. <a href="#AEN130">Support</a></dt>
+
+        <dt>6. <a href="#AEN148">Troubleshooting</a></dt>
+
+        <dd>
+          <dl>
+            <dt>6.1. <a href="#AEN150">How to check the kernel
+            version</a></dt>
+
+            <dt>6.2. <a href="#AEN156">Large number of
+            readers</a></dt>
+
+            <dt>6.3. <a href="#AEN167">Hotplugging</a></dt>
+
+            <dt>6.4. <a href="#AEN173">Logging</a></dt>
+          </dl>
+        </dd>
+
+        <dt>7. <a href="#AEN179">Known Issues</a></dt>
+
+        <dt>8. <a href="#AEN184">Additional Information</a></dt>
+
+        <dd>
+          <dl>
+            <dt>8.1. <a href="#AEN186">Beeping at Keypress</a></dt>
+
+            <dt>8.2. <a href="#AEN193">Mandatory locking</a></dt>
+
+            <dt>8.3. <a href="#AEN199">Permissions</a></dt>
+
+            <dt>8.4. <a href="#AEN202">CT-API</a></dt>
+
+            <dt>8.5. <a href="#AEN207">PC/SC</a></dt>
+
+            <dd>
+              <dl>
+                <dt>8.5.1. <a href="#AEN210">Installation</a></dt>
+              </dl>
+            </dd>
+
+            <dt>8.6. <a href="#AEN217">Multithreading</a></dt>
+
+            <dt>8.7. <a href="#AEN221">command size</a></dt>
+
+            <dt>8.8. <a href="#AEN224">Keypressed callback</a></dt>
+
+            <dt>8.9. <a href="#AEN238">Obtaining Version
+            Info</a></dt>
+
+            <dt>8.10. <a href="#AEN255">Additional CT_init
+            Replacement Function</a></dt>
+
+            <dt>8.11. <a href="#AEN268">Verifying Pins Using PC/SC
+            Function SCardControl</a></dt>
+          </dl>
+        </dd>
+      </dl>
+    </div>
+
+    <div class="section">
+      <h2 class="section"><a name="AEN20" id="AEN20">1.
+      Overview</a></h2>
+
+      <p>This driver for the REINER SCT cyberJack pinpad/e-com USB
+      family of chipcard readers implements the CT-API 1.1
+      interface, as well as the PC/SC interface of pcsc-lite.</p>
+
+      <p>It is implemented 100% in userspace. This means no trouble
+      with different kernel versions, compiling/patching the kernel
+      etc.</p>
+
+      <p>All accesses are done via the <tt class="literal">usb
+      devfs</tt> in <tt class="filename">/proc/bus/usb</tt> (or
+      <tt class="filename">/dev/bus/usb</tt> for udev-based
+      systems).</p>
+
+      <p>Permission handling is done <span class=
+      "emphasis"><i class="emphasis">only</i></span> via udev. The
+      <tt class="filename">cyberjack.rules</tt> if installed to
+      <tt class="filename">/etc/udev/rules.d</tt> is automatically
+      called by udev when a reader is plugged in. This scripts
+      dynamically updates the permissions of the respective device,
+      so users in the group <tt class="literal">cyberjack</tt> are
+      able to access it.</p>
+
+      <p>For more information about the smart card reader itself
+      please visit <a href="http://www.reiner-sct.com/" target=
+      "_top">http://www.reiner-sct.com/</a>. There is also a shop
+      where the the readers can be ordered online.</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN35" id="AEN35">2. Readers
+      supported by this driver</a></h2>
+
+      <p>The following Reiner-SCT readers are supported:</p>
+
+      <div class="informaltable">
+        <a name="AEN38" id="AEN38"></a>
+
+        <table border="1" class="CALSTABLE">
+          <col>
+          <col>
+
+          <thead>
+            <tr>
+              <th>Product</th>
+
+              <th>ProductID</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>REINER SCT cyberJack pinpad USB</td>
+
+              <td>0x100</td>
+            </tr>
+
+            <tr>
+              <td>REINER SCT cyberJack e-com USB</td>
+
+              <td>0x100</td>
+            </tr>
+
+            <tr>
+              <td>REINER SCT cyberJack pinpad_a USB</td>
+
+              <td>0x300</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>You can use the <b class="command">lsusb</b> command to
+      list all devices connected to the USB bus of your machine. It
+      will print out the vendor and device ID of all your devices,
+      like :
+
+      <p><samp class="computeroutput">Bus Nr Device Nr VeID:PrID
+      Bus 002 Device 002: ID 0451:1446 Texas Instruments, Inc.
+      TUSB2040/2070 Hub Bus 002 Device 006: ID 0c4b:0300</samp></p>
+
+      <p>The REINER SCT VendorID is <tt class="literal">0c4b</tt>.
+      ProductID's can be looked up in the table above.</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN59" id="AEN59">3.
+      distribution-specific notes</a></h2>
+
+      <p>You find all packages at <a href=
+      "http://www.reiner-sct.com/content/view/32/43/#linux" target=
+      "_top">http://www.reiner-sct.com/content/view/32/43/#linux</a>.</p>
+
+      <p>Most packages need you to add the user which is to access
+      the card reader to be added to the group <span class=
+      "emphasis"><i class="emphasis">cyberjack</i></span>. This can
+      be done by using the tool <span class="emphasis"><i class=
+      "emphasis">kuser</i></span> or the system's administration
+      tool (e.g. <span class="emphasis"><i class=
+      "emphasis">yast</i></span> on SuSE).</p>
+
+      <p>You should reboot your machine after installing the driver
+      package and adding the user to the group <span class=
+      "emphasis"><i class="emphasis">cyberjack</i></span> in order
+      for the changes to take effect.</p>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN69" id="AEN69">3.1.
+        RPM-based</a></h3>
+
+        <p>Reiner-SCT provides RPM packages for the following
+        distributions:</p>
+
+        <ul>
+          <li>
+            <p>SuSE 10.2</p>
+          </li>
+
+          <li>
+            <p>SuSE 10.1</p>
+          </li>
+
+          <li>
+            <p>SuSE 10.0</p>
+          </li>
+
+          <li>
+            <p>SuSE 9.3</p>
+          </li>
+
+          <li>
+            <p>Fedora Core 5</p>
+          </li>
+
+          <li>
+            <p>Fedora Core 4</p>
+          </li>
+        </ul>
+
+        <p>Just install the package corresponding to your system
+        like this: <kbd class="userinput">&#13; rpm -i &lt;package
+        file&gt;</kbd></p>
+
+        <p>If you already have one of Reiner-SCT's previous RPM
+        packages installed you must update that existing package
+        instead, like in: <kbd class="userinput">&#13; rpm -U
+        &lt;package file&gt;</kbd></p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN89" id="AEN89">3.2.
+        DEB-based</a></h3>
+
+        <p>Reiner-SCT provides RPM packages for the following
+        distributions:</p>
+
+        <ul>
+          <li>
+            <p>Debian unstable</p>
+          </li>
+
+          <li>
+            <p>Ubuntu 6.06</p>
+          </li>
+
+          <li>
+            <p>Ubuntu 6.10</p>
+          </li>
+        </ul>
+
+        <p>Just install the package corresponding to your system
+        like this: <kbd class="userinput">&#13; dpkg -i &lt;package
+        file&gt;</kbd></p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN101" id="AEN101">3.3. All
+        other Distributions</a></h3>
+
+        <p>There is currently no experience with other Linux
+        distributions. It should work in most cases as described
+        above. If you get any problems with the RPM package, you
+        can try to rebuild it on your system with <kbd class=
+        "userinput">&#13; rpm --rebuild &lt;source package
+        file&gt;</kbd> or <kbd class="userinput">&#13; rpmbuild
+        --rebuild &lt;source package file&gt;</kbd></p>
+
+        <p>If you want to compile the source yourself just go into
+        the main directory of the extracted archive and type
+        <kbd class="userinput">&#13; ./configure make</kbd></p>
+
+        <p>The include file <tt class="filename">ctapi.h</tt> and
+        the resulting library <tt class=
+        "filename">libctapi-cyberjack.so</tt> from the directory
+        <tt class="filename">ctapi/</tt> can then be copied to
+        convenient places. For <tt class="filename">ctapi.h</tt>
+        this would normally be <tt class=
+        "filename">/usr/include</tt> and for the library <tt class=
+        "filename">/usr/lib</tt>. The command <b class=
+        "command">make install</b> can do that for you.</p>
+
+        <p>The name scheme <tt class=
+        "filename">libctapi-cyberjack.*</tt> has been choosen to
+        make it possible to install more than one CT-API library on
+        your system.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN118" id="AEN118">4. Updating
+      the Firmware</a></h2>
+
+      <p>The latest driver contains the tool "cjflash" which can be
+      used to update the firmware of the reader.</p>
+
+      <p>The current version of this tool only supports flashing
+      newer Cyberjack devices (USB product id 0x400).</p>
+
+      <p>To update the firmware just use the following command:
+      <kbd class="userinput">&#13; cjflash 1 Kernel_V30_07.bin
+      Kernel_V30_07.bin.ecoma.sgn</kbd></p>
+
+      <p>The first argument is the number of the device (starting
+      with "1", the second reader would be "2"). The next argument
+      is the name of the file containing the new firmware, followed
+      by the name of the file containing the signature of the new
+      firmware.</p>
+
+      <p>After this command has been issued the reader asks you to
+      confirm the operation (press "OK" on the reader's keypad to
+      confirm or "CANCEL" to abort).</p>
+
+      <p>If the reader hangs after you pressed "OK" then it has an
+      old firmware. In that case you'll have to use a slightly
+      modified version of the command above: <kbd class=
+      "userinput">&#13; CJ_USB_MODE=1 cjflash 1 Kernel_V30_07.bin
+      Kernel_V30_07.bin.ecoma.sgn</kbd></p>
+
+      <p>This sets the environment variable "CJ_USB_MODE" to the
+      value "1" prior to executing the command. This tells the
+      driver (which is used by cjflash) that another approach to
+      the reader is needed.</p>
+
+      <p>Please only set that variable if the tool doesn't work
+      otherwise!</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN130" id="AEN130">5.
+      Support</a></h2>
+
+      <p>Support of this driver is provided by REINER SCT. E-mail:
+      support@reiner-sct.com Postal address: Schwabacher Str. 34,
+      90762 F&uuml;rth, GERMANY</p>
+
+      <p>In your problem description, please include as far as
+      possible:</p>
+
+      <ul>
+        <li>
+          <p>Any error messages you get.</p>
+        </li>
+
+        <li>
+          <p>Which Linux distribution you use including version,
+          e.g. SuSE 10.1, Debian 3.0r1 testing, ...</p>
+        </li>
+
+        <li>
+          <p>CPU type, e.g. on Linux the content of the file
+          <tt class="filename">/proc/cpuinfo</tt>.</p>
+        </li>
+
+        <li>
+          <p>Kernel version, e.g. on Linux the output from the
+          command <b class="command">uname -r</b>.</p>
+        </li>
+
+        <li>
+          <p>List of attached USB devices, e.g. on Linux the output
+          of the <b class="command">lsusb</b> command.</p>
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN148" id="AEN148">6.
+      Troubleshooting</a></h2>
+
+      <div class="section">
+        <h3 class="section"><a name="AEN150" id="AEN150">6.1. How
+        to check the kernel version</a></h3>
+
+        <p>You can determine the version of the currently running
+        kernel by executing <kbd class="userinput">uname
+        -r</kbd></p>
+
+        <p>The version of the installed kernel sources, which are
+        normally located below <tt class="filename">/usr/src</tt>,
+        can be determined by looking at the source directory name
+        or by looking into the main Makefile, where it is in the
+        first three lines.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN156" id="AEN156">6.2. Large
+        number of readers</a></h3>
+
+        <p>The cyberJack has been tested with up to 52 devices
+        attached simultaneously to a single PC via 7-port hubs.
+        Some notes regarding this configuration:</p>
+
+        <ul>
+          <li>
+            <p>Linux at least up to 2.4.19 does result in a kernel
+            panic, when too many devices are attached. Known to
+            work is 2.4.20.</p>
+          </li>
+
+          <li>
+            <p>Sometimes timeouts occur resulting in a shift of the
+            T=1 blocks resulting in bad performance and sooner or
+            later a failure of communcation. The problem seems to
+            lie somewhere in the usb-uhci part and vanishes with a
+            faster PC. (Try &gt;2GHz)</p>
+          </li>
+
+          <li>
+            <p>If there are still some problems try other hubs and
+            other USB host controller cards. There seems to be a
+            great difference in quality in these parts.</p>
+          </li>
+        </ul>
+
+        <p>The performance does not degrade, when going from 1 up
+        to 50 readers, even when doing constant I/O with cards.
+        (Select and Read Binary)</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN167" id="AEN167">6.3.
+        Hotplugging</a></h3>
+
+        <p>Linux supports hotplugging with USB devices. This is
+        implemented via the udev-system.</p>
+
+        <p>You can find some udev scripts for the REINER SCT
+        cyberjack reader family in the <tt class=
+        "filename">etc/udev</tt> directory of this archive.</p>
+
+        <p>Since udev-related scripts are highly distribution
+        specific, REINER SCT can only provide limited support in
+        this area. The provided RPM and Debian packages install
+        those scripts to their respective places.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN173" id="AEN173">6.4.
+        Logging</a></h3>
+
+        <p>The cyberjack CT-API library supports logging of the
+        communication with the reader. This is done, if at the
+        moment <code class="function">CT_init</code> is called the
+        environment variable <code class="envar">CJDEBUG</code>
+        exists. The default output file is <tt class=
+        "filename">/tmp/cj.log</tt>. The logging is done on T=1
+        level and each entry begins with a time stamp.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN179" id="AEN179">7. Known
+      Issues</a></h2>
+
+      <p>Unfortunately, all Linux kernel versions, at least up to
+      (including) 2.6.12-rc5 have a severe bug in the handling of
+      asynchronous URB's (USB Request Blocks) in userspace. This
+      bug is totally unrelated to the REINER-SCT cyberjack driver,
+      but it will show as soon as the PC/SC daemon terminates (and
+      you're using a pinpad_a (0x300) reader. The bug can crash
+      your kernel :(.</p>
+
+      <p>A bugfix has been developed (but not yet included into the
+      mainline kernel). It is available as kernel patch in
+      'patches/usb-async_urb-devio-oops-fix.patch'.</p>
+
+      <p>It is strongly recommended to apply this kernel patch if
+      you intend to use the PC/SC driver.</p>
+    </div>
+
+    <div class="section">
+      <hr>
+
+      <h2 class="section"><a name="AEN184" id="AEN184">8.
+      Additional Information</a></h2>
+
+      <div class="section">
+        <h3 class="section"><a name="AEN186" id="AEN186">8.1.
+        Beeping at Keypress</a></h3>
+
+        <p>Starting with Version 2.0.5 of ctapi-cyberjack, the host
+        PC will emit a beep sound at every key press. The driver
+        tries to detect the best mechanism for beeping by itself,
+        i.e. xBell when you run under X11, or sending a BEL ASCII
+        character to STDOUT when running as a console
+        application.</p>
+
+        <p>If you want to disable the beep, you can set the
+        <code class="constant">CJCTAPI_NO_KEYBEEP</code>
+        environment variable before starting your application.</p>
+
+        <p>Depending on your shell, this can be achieved with a
+        command like <b class="command">export
+        CJCTAPI_NO_KEYPRESS</b>.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN193" id="AEN193">8.2.
+        Mandatory locking</a></h3>
+
+        <p>Normal locking is only advisory, i.e. the programs must
+        be cooperative to do the locking properly. A
+        non-cooperative program can ignore a lock and access the
+        reader. Mandatory locking, which stops even a malicious
+        program from access the reader when it is locked, requires
+        setting special permissions of the device node.</p>
+
+        <p>From <tt class=
+        "filename">linux/Documentation/mandatory.txt</tt>:
+        <span class="QUOTE">" A file is marked as a candidate for
+        mandatory locking by setting the group-id bit in its file
+        mode but removing the group-execute bit. This is an
+        otherwise meaningless combination, and was chosen by the
+        System V implementors so as not to break existing user
+        programs. "</span></p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN199" id="AEN199">8.3.
+        Permissions</a></h3>
+
+        <p>If a normal user should be able to access and use the
+        cyberJack chipcard reader, the permissions should be
+        '2666'. The '2' enables the mandatory locking described in
+        the section before. The '666' enables read/write for all
+        users.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN202" id="AEN202">8.4.
+        CT-API</a></h3>
+
+        <p>The CT-API specification can be downloaded at <a href=
+        "http://www.darmstadt.gmd.de/~eckstein/CT/mkt.html" target=
+        "_top">http://www.darmstadt.gmd.de/~eckstein/CT/mkt.html</a></p>
+
+        <p>Please note, that the port numbers start with one. This
+        behaviour is specified in the CT-API documentation.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN207" id="AEN207">8.5.
+        PC/SC</a></h3>
+
+        <p>This driver package now contains a working PC/SC driver
+        for pcsc-lite. The driver was tested with pcsc-lite-1.2.0
+        up to 1.3.1.</p>
+
+        <div class="section">
+          <hr>
+
+          <h4 class="section"><a name="AEN210" id="AEN210">8.5.1.
+          Installation</a></h4>
+
+          <p>If you're installing the driver via a pre-built RPM
+          package, make sure you install the
+          "ctapi-cyberjack-ifd-handler" package.</p>
+
+          <p>If you're building the driver from source code, make
+          sure you install the <tt class=
+          "filename">pcsc/ifd-cyberjack.bundle</tt> directory to
+          the "usb plugdir" directory of your pcsc-lite
+          installation. The default <b class="command">make
+          install</b> procedure puts it into <tt class=
+          "filename">/usr/lib/pcsc/drivers/</tt>.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN217" id="AEN217">8.6.
+        Multithreading</a></h3>
+
+        <p>The library is NOT save against multiple threads
+        accessing at the same time the same reader. This gives you
+        also most probably problems with your card anyway.</p>
+
+        <p>The library is save against multiple threads accessing
+        multiple readers. So you could start 3 threads, each
+        accessing their own card in their own reader.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN221" id="AEN221">8.7.
+        command size</a></h3>
+
+        <p>The command size is currently limited to ISO7816 short
+        commands.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN224" id="AEN224">8.8.
+        Keypressed callback</a></h3>
+
+        <p></p>
+
+        <div class="funcsynopsis">
+          <a name="AEN227" id="AEN227"></a>
+
+          <p><code><code class="FUNCDEF">IS8
+          rsct_setkeycb</code>(IU16ctn, void (*cb) (void
+          *user_data));</code></p>
+        </div>
+
+        <p>The function <code class="function">rsct_setkeycb</code>
+        has been added to specify a callback to signal keypresses.
+        The function specified in the second parameter is called
+        whenever a C4 or F4 S-block is received from the reader.
+        This information can be used to help the user, when
+        entering a PIN on the cyberJack pinpad reader, which does
+        not show how many keys have been pressed.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN238" id="AEN238">8.9.
+        Obtaining Version Info</a></h3>
+
+        <p></p>
+
+        <div class="funcsynopsis">
+          <a name="AEN241" id="AEN241"></a>
+
+          <p><code><code class="FUNCDEF">void
+          rsct_version</code>(IU8*vmajor, IU8*vminor,
+          IU8*vpatchlevel, IU16*vbuild);</code></p>
+        </div>
+
+        <p>The function <code class="function">rsct_version</code>
+        returns the complete version of the driver.</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN255" id="AEN255">8.10.
+        Additional CT_init Replacement Function</a></h3>
+
+        <p></p>
+
+        <div class="funcsynopsis">
+          <a name="AEN258" id="AEN258"></a>
+
+          <p><code><code class="FUNCDEF">IS8
+          rsct_init_name</code>(IU16ctn, const
+          char*device_name);</code></p>
+        </div>
+
+        <p>The function <code class=
+        "function">rsct_init_name</code> can be used to directly
+        specify the device to be used. The device name is specified
+        like for PC/SC drivers:
+        "usb:VENDOR_ID/PRODUCT_ID:libusb:BUS_ID:DEVICE_ID", so for
+        a new cyberjack at /proc/bus/usb/003/002 the correct name
+        would be: "usb:0c4b/0300:libusb:003:002"</p>
+      </div>
+
+      <div class="section">
+        <hr>
+
+        <h3 class="section"><a name="AEN268" id="AEN268">8.11.
+        Verifying Pins Using PC/SC Function SCardControl</a></h3>
+
+        <p>The following table shows values for the
+        PSCS_VERIFY_STRUCTURE object which have been tested with
+        ASCII and FPIN2 formatted pins.</p>
+
+        <div class="informaltable">
+          <a name="AEN271" id="AEN271"></a>
+
+          <table border="1" class="CALSTABLE">
+            <col>
+            <col>
+            <col>
+
+            <thead>
+              <tr>
+                <th>Field</th>
+
+                <th>ASCII</th>
+
+                <th>FPIN2</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>bTimerOut</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+
+              <tr>
+                <td>bTimerOut2</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+
+              <tr>
+                <td>bmFormatString</td>
+
+                <td>82</td>
+
+                <td>81</td>
+              </tr>
+
+              <tr>
+                <td>bmPINBlockString</td>
+
+                <td>04</td>
+
+                <td>48</td>
+              </tr>
+
+              <tr>
+                <td>bmPINLengthFormat</td>
+
+                <td>00</td>
+
+                <td>04</td>
+              </tr>
+
+              <tr>
+                <td>wPINMaxExtraDigit</td>
+
+                <td>0408</td>
+
+                <td>0408</td>
+              </tr>
+
+              <tr>
+                <td>bEntryValidationCondition</td>
+
+                <td>02</td>
+
+                <td>02</td>
+              </tr>
+
+              <tr>
+                <td>bNumberMessage</td>
+
+                <td>01</td>
+
+                <td>01</td>
+              </tr>
+
+              <tr>
+                <td>wLangId</td>
+
+                <td>0904</td>
+
+                <td>0904</td>
+              </tr>
+
+              <tr>
+                <td>bMsgIndex</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+
+              <tr>
+                <td>bTeoPrologue 0-2</td>
+
+                <td>00</td>
+
+                <td>00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

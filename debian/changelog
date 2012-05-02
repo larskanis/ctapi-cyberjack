@@ -1,0 +1,346 @@
+ctapi-cyberjack2 (3.3.6stable-1) stable; urgency=low
+  * released 3.3.6stable
+
+ -- Martin Preuss <martin@libchipcard.de>  Tue, 04 Jan 2011 17:25:00 +0200
+
+ctapi-cyberjack2 (3.3.6beta2-1) stable; urgency=low
+  * released 3.3.6beta2
+  * implemented IFDHSetProtocolParameters
+  * merged with main driver sources at Reiner SCT
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 08 Nov 2010 18:25:00 +0200
+
+ctapi-cyberjack2 (3.3.6beta1-1) stable; urgency=low
+  * released 3.3.6beta1
+  * this is the first beta of 3.3.6.
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 31 Jul 2010 23:45:00 +0200
+
+ctapi-cyberjack2 (3.3.5-1) stable; urgency=low
+  * released 3.3.5
+  * this release fixes some problems with cyberJacks/ecoms 0x300 and 0x401
+
+ -- Martin Preuss <martin@libchipcard.de>  Tue, 24 Feb 2010 12:24:00 +0200
+
+ctapi-cyberjack2 (3.3.5beta1-1) stable; urgency=low
+  * released 3.3.5beta1
+  * fixed a problem with 0x300 devices and libusb-1.x (random crashes)
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 18 Jan 2010 23:43:00 +0200
+
+ctapi-cyberjack2 (3.3.4stable-1) stable; urgency=low
+  * released 3.3.4stable
+  * fixed a problem with 0x401 devices (which are in fact transformed 0x100ers)
+
+ -- Martin Preuss <martin@libchipcard.de>  Tue, 22 Dec 2009 23:17:00 +0200
+
+ctapi-cyberjack2 (3.3.3stable-1) stable; urgency=low
+  * released 3.3.3stable
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 19 Dec 2009 15:05:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta12-1) stable; urgency=low
+  * released 3.3.3beta12
+  * fixed problem of missing "-pthread"
+
+ -- Martin Preuss <martin@libchipcard.de>  Sun, 13 Dec 2009 20:12:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta11-1) stable; urgency=low
+  * released 3.3.3beta11
+  * adapted to Mandriva 10.0
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 04 Dec 2009 21:01:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta10-1) stable; urgency=low
+  * released 3.3.3beta10
+  * sleep 5secs after calling libusb_reset_device because some applications
+    (most notably Moneyplex) call CT_close() and CT_init() in fast succession so
+    old cyberJack's (0x100) don't have enough time to perform their reset and thus
+    will disappear from the view of the application
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 27 Nov 2009 16:40:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta9-1) stable; urgency=low
+  * released 3.3.3beta9
+  * don't bail out if no kernel driver uses the 0x100er cyberJack
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 23 Nov 2009 20:00:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta8-1) stable; urgency=low
+  * released 3.3.3beta8
+  * use userspace module for old cyberJack devices (0x100)
+
+ -- Martin Preuss <martin@libchipcard.de>  Sun, 22 Nov 2009 16:30:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta7-1) stable; urgency=low
+  * released 3.3.3beta7
+  * fixed some libusb-0-related problems
+  * removed readline-devel as a RPM builddep
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 20 Nov 2009 00:10:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta6-1) stable; urgency=low
+  * released 3.3.3beta6
+  * fixed a problem with getting the name of an active kernel module
+    using the cyberJack device to be opened
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 19 Nov 2009 23:20:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta5-1) stable; urgency=low
+  * released 3.3.3beta5
+  * made support for PC/SC fully optional (as requested by gentoo users)
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 19 Nov 2009 21:51:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta4-1) stable; urgency=low
+  * released 3.3.3beta4
+  * added device enumeration using libusb1
+  * make use of HAL optional (don't use it when making Debian/Ubuntu 
+    packages since Ubuntu 9.10 no longer uses HAL)
+
+ -- Martin Preuss <martin@libchipcard.de>  Sun, 15 Nov 2009 17:46:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta3-1) stable; urgency=low
+  * released 3.3.3beta3
+  * fixed detection for 64 bit archs
+  * CTAPI driver is now thread-safe
+  * now compiles with GCC 4.4.1
+  * remove dependency of libsysfs
+  * prefer libUSB-1.0 over libUSB-0.x
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 14 Nov 2009 15:57:00 +0200
+
+ctapi-cyberjack2 (3.3.3beta2-1) stable; urgency=low
+  * 2nd beta of 3.3.3
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 31 Oct 2009 17:32:00 +0200
+
+ctapi-cyberjack2 (3.3.2-1) stable; urgency=low
+  * stable release
+
+ -- Martin Preuss <martin@libchipcard.de>  Thu, 23 Jul 2009 18:12:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta7-1) stable; urgency=low
+  * accept values between 1000 and 1999 in addition to 0x9000+ for 
+    selection by serialnumber
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 01 Jul 2009 11:39:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta6-1) stable; urgency=low
+  * fixed code for non-serial use
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 09 Jun 2009 20:00:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta5-1) stable; urgency=low
+  * added unconditional debug message for CT_init()
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 20 May 2009 19:30:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta4-1) stable; urgency=low
+  * fycyberjack: added icons for newer cyberJacks
+
+ -- Martin Preuss <martin@libchipcard.de>  Tue, 12 May 2009 20:04:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta3-1) stable; urgency=low
+  * added support for latest cyberJack readers
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 09 May 2009 14:30:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta2-1) stable; urgency=low
+  * added some debug messages to trace a problem in Ubuntu 9.04
+
+ -- Martin Preuss <martin@libchipcard.de>  Tue, 05 May 2009 20:17:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta1-1) stable; urgency=low
+  * added a graphical diagnosis tool which also allows to flash newer cyberJacks
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 30 Mar 2009 13:00:00 +0200
+
+ctapi-cyberjack2 (3.3.1-1) stable; urgency=low
+  * stable release
+
+ -- Martin Preuss <martin@libchipcard.de>  Sun, 15 Feb 2009 17:00:00 +0200
+
+ctapi-cyberjack2 (3.3.2beta3-1) stable; urgency=low
+  * beta release
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 07 Feb 2009 13:00:00 +0200
+
+ctapi-cyberjack2 (3.3.0-1) stable; urgency=low
+  * stable release
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 23 Jul 2008 20:20:00 +0200
+
+ctapi-cyberjack2 (3.3.0beta4-1) stable; urgency=low
+  * IFD: accept WIN32 code for GET_FEATURE (now works with rdesktop)
+  * IFD: fixed a problem with VERIFY_PIN
+
+ -- Martin Preuss <martin@libchipcard.de>  Thu, 03 Jul 2008 14:55:00 +0200
+
+ctapi-cyberjack2 (3.3.0beta3-1) stable; urgency=low
+  * This release fixes a problem in implementation of 
+    FEATURE_MCT_READER_DIRECT.
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 11 Jun 2008 14:15:00 +0200
+
+ctapi-cyberjack2 (3.3.0beta2-1) stable; urgency=low
+  * This release adds support for the latest version of pcsclite. For this to
+    work this driver now depends on libhal. However, if libHAL isn't present
+    then support for it will not be compiled.
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 07 Jun 2008 09:44:00 +0200
+
+ctapi-cyberjack2 (3.3.0beta1-1) stable; urgency=low
+  * released version 3.3.0beta1-1
+   This release adds support for the PC/SC part10 feature MCT_READERDIRECT.
+   It also fixes a problem with PC/SC part10 VERIFY_DIRECT. This driver now
+   recognizes older Ecom's with new firmware (product id 0x401).
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 02 Jun 2008 07:20:00 +0200
+
+ctapi-cyberjack2 (3.2.0-1) stable; urgency=low
+  * released version 3.2.0-1
+    This release fixes some bugs and adds workarounds for ancient cyberJack
+    readers (0x100). The documentation in LIESMICH.xml has been updated.
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 15 Jan 2008 18:30:00 +0200
+
+ctapi-cyberjack2 (3.2.0beta2-1) stable; urgency=low
+  * released version 3.2.0beta2-1
+    This release tries to fix the problems reported by some users regarding
+    the old cyberJack pinpad/ecom (0x100).
+
+ -- Martin Preuss <martin@libchipcard.de>  Sat, 15 Jan 2008 18:30:00 +0200
+
+ctapi-cyberjack2 (3.1.0-1) stable; urgency=low
+  * released version 3.1.0-1
+    This is the next stable release of this driver. It introduces a new method
+    of selecting devices by serial number and supports Cyberjacks connected
+    via serial ports (COMx). It is because of these features that the minor
+    version has been incremented (->3.0.x to 3.1.0).
+
+ -- Martin Preuss <martin@libchipcard.de>  Thu, 10 Jan 2008 09:02:00 +0200
+
+ctapi-cyberjack2 (3.0.6rc4-1) stable; urgency=low
+  * released version 3.0.6rc4-1
+    Fixed a problem with 0x100er devices.
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 12 Dec 2007 21:11:00 +0200
+
+ctapi-cyberjack2 (3.0.6rc3-1) stable; urgency=low
+  * released version 3.0.6rc3-1
+    This release adds support for Cyberjack Ecom A connected via serial 
+    cable.
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 12 Dec 2007 21:15:00 +0200
+
+ctapi-cyberjack2 (3.0.6rc2-1) stable; urgency=low
+  * released version 3.0.6rc2-1
+    This release fixes a problem with the APDU 20,10 and Ecom(a).
+
+ -- Martin Preuss <martin@libchipcard.de>  Thu, 29 Nov 2007 13:07:00 +0200
+ 
+ctapi-cyberjack2 (3.0.6rc1-1) stable; urgency=low
+  * released version 3.0.6rc1-1
+    This release adds special handling for port values 0x9000 and above. 
+    Those values are used to assign fixed port values to particular readers
+    by using the serial number available with Cyberjack readers with productId
+    >=0x300.
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 19 Nov 2007 08:22:00 +0200
+
+ctapi-cyberjack2 (3.0.6beta2-1) stable; urgency=low
+  * released version 3.0.6beta2-1
+    This release in combination with the latest firmware should fix the 
+    problems reported with Ubuntu 7.xx and the Cyberjack Ecom (a).
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 16 Nov 2007 21:15:00 +0200
+
+ctapi-cyberjack2 (3.0.6beta1-1) stable; urgency=low
+  * released version 3.0.6beta1-1
+    This release in combination with the latest firmware should fix the 
+    problems reported with Ubuntu 7.xx and the Cyberjack Ecom (a).
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 16 Nov 2007 10:28:00 +0200
+
+ctapi-cyberjack2 (3.0.5-1) stable; urgency=low
+  * released version 3.0.5
+    This is the final release of version 3.0.5 since rc1 has proven to be
+    solving remaining problems.
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 19 Oct 2007 16:50:00 +0200
+
+ctapi-cyberjack2 (3.0.5rc1-1) stable; urgency=low
+  * released version 3.0.5rc1
+    This release fixes a bug which makes Moneyplex unable to read cards with
+    new ecoms (introduced by 3.0.5beta5). This version is considered a release
+    candidate.
+
+ -- Martin Preuss <martin@libchipcard.de>  Thur, 18 Oct 2007 17:43:00 +0200
+
+ctapi-cyberjack2 (3.0.5beta5-1) stable; urgency=low
+  * released version 3.0.5beta5
+    This release enables reading of German medical cards with 0x400 devices
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 19 Sep 2007 23:52:00 +0200
+
+ctapi-cyberjack2 (3.0.5beta4-1) stable; urgency=low
+  * released version 3.0.5beta4
+    This release introduces a workaround for hanging USB hardware.
+
+ -- Martin Preuss <martin@libchipcard.de>  Wed, 19 Sep 2007 23:52:00 +0200
+
+ctapi-cyberjack2 (3.0.4-1) stable; urgency=low
+  * released version 3.0.4
+    This release fixes a bug in the USB logging code. The diagnosis tool
+    cyberjack now shows some firmware information.
+
+ -- Martin Preuss <martin@libchipcard.de>  Sun, 16 Sep 2007 23:52:00 +0200
+
+ctapi-cyberjack2 (3.0.3-1) stable; urgency=low
+  * released version 3.0.3
+    This release fixes problems of old Ecom readers with APDUs and their 
+    response when exceeding 262 bytes. It also enables logging at USB level.
+
+ -- Martin Preuss <martin@libchipcard.de>  Fri, 20 Jul 2007 12:00:00 +0200
+
+
+ctapi-cyberjack2 (3.0.2-1) stable; urgency=low
+
+  * released version 3.0.2
+    This release removes some memory leaks found by valgrind. It also fixes 
+    the problem of the reader sometimes being unresponsive (i.e. sometimes it
+    just hung up when trying to open it for the second time with CT_open()).
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 16 Jul 2007 08:00:00 +0200
+
+
+ctapi-cyberjack2 (3.0.1-1) stable; urgency=low
+
+  * released version 3.0.1
+    This is a hotfix for the USB suspend problem with Kernel 2.6.20:
+    It seems like libusb does not detect the cyberjack 0x400 correctly when
+    the reader is suspended (e.g. libusb only detects the reader when it
+    currently is not suspended, but the reader needs some time to become
+    active after resuming and Libusb does not wait for this time...
+    Now we just try for about 5 secs to enumerate the USB devices via libusb
+    which keeps the reader active until it has completed its initialization).
+    This fix is only needed as long as Libusb has these problems, maybe they
+    will fix this...
+
+ -- Martin Preuss <martin@libchipcard.de>  Thu, 21 Jun 2007 12:00:00 +0200
+
+
+ctapi-cyberjack2 (3.0.0-1) stable; urgency=low
+
+  * released version 3.0.0
+
+ -- Martin Preuss <martin@libchipcard.de>  Thu, 21 Jun 2007 12:00:00 +0200
+
+
+ctapi-cyberjack2 (3.0.0beta-1) unstable; urgency=low
+
+  * released version 3.0.0beta
+
+ -- Martin Preuss <martin@libchipcard.de>  Mon, 7 May 2007 12:00:00 +0200
+

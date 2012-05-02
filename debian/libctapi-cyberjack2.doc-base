@@ -1,0 +1,18 @@
+Document: ctapi-cyberjack
+Title: Debian ctapi-cyberjack README
+Author: Matthias Bruestle, Harald Welte, Martin Preuss
+Abstract: This manual describes what ctapi-cyberjack is
+ and how it can be used to manage online manuals on Debian systems.
+Section: unknown
+
+Format: postscript
+Files: /usr/share/doc/libctapi-cyberjack2/README.ps.gz
+
+Format: text
+Files: /usr/share/doc/libctapi-cyberjack2/README.txt.gz
+
+Format: HTML
+Index: /usr/share/doc/libctapi-cyberjack2/README.html
+Files: /usr/share/doc/libctapi-cyberjack2/README.html
+
+

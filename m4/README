@@ -1,0 +1,6 @@
+# $Id: README 284 2004-03-29 14:56:51Z aquamaniac $
+# (c) 2002 Martin Preuss<martin@libchipcard.de>
+
+This folder includes some usefull macros for the automake/autoconf tools.
+This dramatically simplifies the "configure.in" file.
+

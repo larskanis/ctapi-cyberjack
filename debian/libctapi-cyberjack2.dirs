@@ -1,0 +1,8 @@
+usr/bin
+usr/lib
+usr/lib/pcsc
+usr/lib/pcsc/drivers
+usr/lib/pcsc/drivers/libifd-cyberjack.bundle
+usr/lib/pcsc/drivers/libifd-cyberjack.bundle
+usr/lib/pcsc/drivers/libifd-cyberjack.bundle/Contents
+usr/lib/pcsc/drivers/libifd-cyberjack.bundle/Contents/Linux

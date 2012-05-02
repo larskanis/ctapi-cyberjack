@@ -1,0 +1,49 @@
+.TH cyberjack 8 "20 April 2010"
+.IX cyberjack
+
+.SH NAME
+cyberjack -- configuration and testing utility
+
+.SH SYNOPSIS
+cyberjack [COMMAND] [ARGUMENTS]
+
+.SH DESCRIPTION
+cyberjack helps you in case of troubleshooting as well as for configuration of
+your CyberJack card reader. Using the "check" command, it will create 3 files:
+
+.IP "cyberjack-report.log"
+with the test results
+.IP "cyberjack-hints.log"
+with possible hints for you to solve the issue you may have
+.IP "cyberjack.xml"
+with detailed results for the support team
+
+.SH OPTIONS
+.IP "\fBcheck\fR"
+perform system checks
+
+.IP "\fBaddflags <flag>\fR"
+adds flags in the CTAPI configuration file. This command needs an argument (the
+flags to add)
+
+.IP "\fBdelflags <flag>\fR"
+clears flags in the CTAPI configuration file. This command needs an argument
+(the flags to add)
+
+.IP "\fBbeep1\fR"
+Beeps using /dev/console
+
+.IP "\fBbeep2\fR"
+Beeps by outputting sending a control character to stdout
+
+.IP "\fBbeep3\fR"
+Beeps using a running X11 server
+
+.SH EXAMPLES
+cyberjack check
+
+cyberjack addflags 0xffff
+
+cyberjack delflags 0xff00
+
+cyberjack --help

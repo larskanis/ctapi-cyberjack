@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<deviceinfo version="0.2">
+  <device>
+    <!-- REINER SCT cyberJack ecom_a USB -->
+    <match key="info.category" string="usbraw">
+      <match key="@info.parent:usb_device.vendor_id" int="0x0c4b">
+        <match key="@info.parent:usb_device.product_id" int="0x0400">
+	        <merge key="resmgr.class" type="string">usb</merge>
+	      </match>
+      </match>
+    </match>
+  </device>
+
+  <device>
+    <!-- REINER SCT cyberJack pinpad_a2 USB -->
+    <match key="info.category" string="usbraw">
+      <match key="@info.parent:usb_device.vendor_id" int="0x0c4b">
+        <match key="@info.parent:usb_device.product_id" int="0x0401">
+	        <merge key="resmgr.class" type="string">usb</merge>
+	      </match>
+      </match>
+    </match>
+  </device>
+
+  <device>
+    <!-- REINER SCT cyberJack pinpad_a USB -->
+    <match key="info.category" string="usbraw">
+      <match key="@info.parent:usb_device.vendor_id" int="0x0c4b">
+        <match key="@info.parent:usb_device.product_id" int="0x0300">
+	        <merge key="resmgr.class" type="string">usb</merge>
+	      </match>
+      </match>
+    </match>
+  </device>
+
+  <device>
+    <!-- REINER SCT cyberJack ecom USB -->
+    <match key="info.category" string="usbraw">
+      <match key="@info.parent:usb_device.vendor_id" int="0x0c4b">
+        <match key="@info.parent:usb_device.product_id" int="0x0100">
+	        <merge key="resmgr.class" type="string">usb</merge>
+	      </match>
+      </match>
+    </match>
+  </device>
+
+</deviceinfo>
+
