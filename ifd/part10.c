@@ -12,8 +12,8 @@
   SCARD_CTL_CODE(FEATURE_VERIFY_PIN_DIRECT + CLASS2_IOCTL_MAGIC)
 #define IOCTL_FEATURE_MODIFY_PIN_DIRECT \
   SCARD_CTL_CODE(FEATURE_MODIFY_PIN_DIRECT + CLASS2_IOCTL_MAGIC)
-#define IOCTL_FEATURE_MCT_READERDIRECT \
-  SCARD_CTL_CODE(FEATURE_MCT_READERDIRECT + CLASS2_IOCTL_MAGIC)
+#define IOCTL_FEATURE_MCT_READER_DIRECT \
+  SCARD_CTL_CODE(FEATURE_MCT_READER_DIRECT + CLASS2_IOCTL_MAGIC)
 #define IOCTL_FEATURE_MCT_READERUNIVERSAL \
   SCARD_CTL_CODE(FEATURE_MCT_UNIVERSAL + CLASS2_IOCTL_MAGIC)
 
@@ -52,10 +52,10 @@ RESPONSECODE Part10GetFeatures(unsigned short ctn,
   pcsc_tlv++;
   len+=sizeof(PCSC_TLV_STRUCTURE);
 
-  DEBUGP(ctn, "  Reporting Feature FEATURE_MCT_READERDIRECT (%08x)", IOCTL_FEATURE_MCT_READERDIRECT);
-  pcsc_tlv->tag = FEATURE_MCT_READERDIRECT;
+  DEBUGP(ctn, "  Reporting Feature FEATURE_MCT_READER_DIRECT (%08x)", IOCTL_FEATURE_MCT_READER_DIRECT);
+  pcsc_tlv->tag = FEATURE_MCT_READER_DIRECT;
   pcsc_tlv->length = 0x04; /* always 0x04 */
-  pcsc_tlv->value = htonl(IOCTL_FEATURE_MCT_READERDIRECT);
+  pcsc_tlv->value = htonl(IOCTL_FEATURE_MCT_READER_DIRECT);
   pcsc_tlv++;
   len+=sizeof(PCSC_TLV_STRUCTURE);
 
@@ -357,7 +357,7 @@ static RESPONSECODE modifyStructToCtapi(unsigned short ctn,
   nMktPinLength=ps->wPINMaxExtraDigit & 0xff;
   nMktPinLengthBytePosition=(ps->bmPINLengthFormat & 0x0F);
 
-  if (ps->bmPINLengthFormat && 
+  if (ps->bmPINLengthFormat &&
       ((ps->bmPINLengthFormat & 0x10)==0)) {
     uint8_t nBitUnits=ps->bmPINLengthFormat & 0x0F;
 
@@ -708,11 +708,11 @@ RESPONSECODE Part10Control(unsigned short ctn,
 				 TxBuffer, TxLength,
 				 RxBuffer, RxLength, RxReturned);
 
-  case IOCTL_FEATURE_MCT_READERDIRECT:
+  case IOCTL_FEATURE_MCT_READER_DIRECT:
     /* directly send the command with DAD=01 and SAD=02 */
     DEBUGP2(ctn, "ReaderDirect called\n");
     return Part10ExecCtrlApdu(ctn,
-			      TxLength, TxBuffer, 
+			      TxLength, TxBuffer,
 			      RxBuffer, RxLength, RxReturned);
 
   case IOCTL_FEATURE_MCT_READERUNIVERSAL:

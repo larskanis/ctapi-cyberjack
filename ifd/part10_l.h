@@ -45,7 +45,7 @@
 #define FEATURE_GET_KEY_PRESSED   0x05 /**< OMNIKEY Proposal */
 #define FEATURE_VERIFY_PIN_DIRECT 0x06 /**< USB CCID PIN Verify */
 #define FEATURE_MODIFY_PIN_DIRECT 0x07 /**< USB CCID PIN Modify */
-#define FEATURE_MCT_READERDIRECT  0x08 /**< KOBIL Proposal */
+#define FEATURE_MCT_READER_DIRECT 0x08 /**< KOBIL Proposal */
 #define FEATURE_MCT_UNIVERSAL     0x09 /**< KOBIL Proposal */
 #define FEATURE_IFD_PIN_PROP      0x0A /**< Gemplus Proposal */
 #define FEATURE_ABORT             0x0B /**< SCM Proposal */
