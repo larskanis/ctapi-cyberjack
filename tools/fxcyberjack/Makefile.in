@@ -321,7 +321,7 @@ fxcyberjack_LDADD = \
   ../../libcyberjack/libcyberjack.la \
   diag/libfxdiag.la \
   ../../checksuite/libchecksuite.la @THREAD_LIBS@ $(fox_libs) \
-  ../../cjeca32/libeca.la $(libxml2_libs)  -lstdc++
+  ../../cjeca32/libeca.la $(libxml2_libs)  -lstdc++ -ldl
 
 fxcyberjack_SOURCES = \
  fxcy_readerlist.cpp \
@@ -421,7 +421,7 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-fxcyberjack$(EXEEXT): $(fxcyberjack_OBJECTS) $(fxcyberjack_DEPENDENCIES) 
+fxcyberjack$(EXEEXT): $(fxcyberjack_OBJECTS) $(fxcyberjack_DEPENDENCIES)
 	@rm -f fxcyberjack$(EXEEXT)
 	$(CXXLINK) $(fxcyberjack_OBJECTS) $(fxcyberjack_LDADD) $(LIBS)
 

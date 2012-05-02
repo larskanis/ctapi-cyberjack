@@ -9,8 +9,8 @@ fxcyberjack_LDADD=\
   ../../libcyberjack/libcyberjack.la \
   diag/libfxdiag.la \
   ../../checksuite/libchecksuite.la @THREAD_LIBS@ $(fox_libs) \
-  ../../cjeca32/libeca.la $(libxml2_libs)  -lstdc++
-  
+  ../../cjeca32/libeca.la $(libxml2_libs)  -lstdc++ -ldl
+
 fxcyberjack_SOURCES=\
  fxcy_readerlist.cpp \
  fxcy_readerview.cpp \
