@@ -2,7 +2,6 @@
 
 #include "ausb_libusb1_l.h"
 
-
 int rsct_usbdev_init() {
   return ausb_libusb1_init();
 }
@@ -19,14 +18,14 @@ int rsct_usbdev_scan(rsct_usbdev_t **usbdev_list) {
     return -1;
   else {
     libusb_device **list;
-    size_t cnt=libusb_get_device_list(NULL, &list);
+    size_t cnt=libusb_get_device_list(ausb_libusb1_context, &list);
     size_t i;
-  
+
     for (i=0; i<cnt; i++) {
       libusb_device *dev;
       struct libusb_device_descriptor descr;
       int rv;
-  
+
       dev=list[i];
       rv=libusb_get_device_descriptor(dev, &descr);
       if (rv==0) {
@@ -35,13 +34,13 @@ int rsct_usbdev_scan(rsct_usbdev_t **usbdev_list) {
 	  char pbuff[256];
 	  struct stat st;
 	  int havePath=0;
-  
+
 	  d=rsct_usbdev_new();
 	  d->busId=libusb_get_bus_number(dev);
 	  d->busPos=libusb_get_device_address(dev);
 	  d->vendorId=descr.idVendor;
 	  d->productId=descr.idProduct;
-  
+
 	  /* determine path for LibUSB */
 	  snprintf(pbuff, sizeof(pbuff)-1,
 		   "/dev/bus/usb/%03d/%03d",
@@ -59,15 +58,15 @@ int rsct_usbdev_scan(rsct_usbdev_t **usbdev_list) {
 	      havePath=1;
 	    }
 	  }
-  
+
 	  if (havePath) {
 	    strncpy(d->usbPath, pbuff, sizeof(d->usbPath)-1);
 	    d->usbPath[sizeof(d->usbPath)-1]=0;
-  
+
 	    strncpy(d->deviceNodePath, pbuff, sizeof(d->deviceNodePath)-1);
 	    d->deviceNodePath[sizeof(d->deviceNodePath)-1]=0;
 	  }
-  
+
 	  /* generate path for CTAPI/IFD */
 	  snprintf(d->path, sizeof(d->path)-1,
 		   "usb:%04x/%04x:libusb:%03d:%03d",
@@ -75,10 +74,10 @@ int rsct_usbdev_scan(rsct_usbdev_t **usbdev_list) {
 		   d->productId,
 		   d->busId,
 		   d->busPos);
-  
+
 	  if (1) {
 	    libusb_device_handle *dh;
-  
+
 	    rv=libusb_open(dev, &dh);
 	    if (rv) {
 	      fprintf(stderr, "RSCT: Error on libusb_open: %d\n", rv);
@@ -95,7 +94,7 @@ int rsct_usbdev_scan(rsct_usbdev_t **usbdev_list) {
 	      else {
 		d->productName[rv]=0;
 	      }
-  
+
 	      if (descr.idProduct>=0x300) {
 		/* get serial number for newer devices */
 		rv=libusb_get_string_descriptor_ascii(dh, descr.iSerialNumber,
@@ -109,11 +108,11 @@ int rsct_usbdev_scan(rsct_usbdev_t **usbdev_list) {
 		  d->serial[rv]=0;
 		}
 	      }
-  
+
 	      libusb_close(dh);
 	    }
 	  }
-  
+
 	  /* all set, add device */
 	  rsct_usbdev_list_add(usbdev_list, d);
 	}
@@ -122,7 +121,7 @@ int rsct_usbdev_scan(rsct_usbdev_t **usbdev_list) {
 	fprintf(stderr, "RSCT: Error on libusb_get_device_descriptor: %d\n", rv);
       }
     }
-  
+
     libusb_free_device_list(list, 1);
     return 0;
   }

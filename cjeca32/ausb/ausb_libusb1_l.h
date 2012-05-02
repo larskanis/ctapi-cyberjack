@@ -17,6 +17,8 @@ int ausb_libusb1_fini(void);
 libusb_device *ausb_libusb1_get_usbdev(const rsct_usbdev_t *d);
 int ausb_libusb1_handle_events();
 
+extern libusb_context *ausb_libusb1_context;
+
 
 #endif
 

@@ -15,7 +15,7 @@
 
 
 
-static libusb_context *ausb_libusb1_context=NULL;
+libusb_context *ausb_libusb1_context=NULL;
 
 
 int ausb_libusb1_init(void){
@@ -51,7 +51,7 @@ libusb_device *ausb_libusb1_get_usbdev(const rsct_usbdev_t *d) {
     return NULL;
   else {
     libusb_device **list;
-    size_t cnt=libusb_get_device_list(NULL, &list);
+    size_t cnt=libusb_get_device_list(ausb_libusb1_context, &list);
     size_t i;
     libusb_device *dev=NULL;
 
