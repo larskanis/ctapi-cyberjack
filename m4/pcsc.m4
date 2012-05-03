@@ -73,6 +73,7 @@ else
                         /usr/lib/pcsc/lib \
                         /usr/local/pcsc/lib \
                         /usr/lib/x86_64-linux-gnu \
+                        /usr/lib/i386-linux-gnu \
                         /lib"])
     dnl search for pcsc libs
     for d in $pcsc_search_lib_dirs; do
