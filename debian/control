@@ -2,7 +2,7 @@ Source: ctapi-cyberjack2
 Section: misc
 Priority: optional
 Maintainer: Martin Preuss <martin@libchipcard.de>
-Build-Depends: debhelper (>= 4), autotools-dev, libhal-dev, libusb-dev, libfox-1.6-dev, libpcsclite-dev
+Build-Depends: debhelper (>= 4), autotools-dev, libhal-dev, libusb-dev, libfox-1.6-dev, libpcsclite-dev, libxml2-dev
 Standards-Version: 3.7.2
 
 Package: libctapi-cyberjack2
