@@ -1,0 +1,45 @@
+Short HOWTO to compile the source and build *.deb packages for Debian Wheezy
+(uses gcc-4.7)
+
+# get the source code
+cd ~/source
+git clone https://github.com/suboptimal/ctapi-cyberjack.git
+
+# prepare your machine to build *.deb packages
+# (need root rights)
+aptitude install dpkg-dev
+
+# install source dependencies
+# (need root rights)
+aptitude install debhelper autotools-dev libhal-dev libusb-dev libfox-1.6-dev libpcsclite-dev libxml2-dev
+
+# build *.deb packages
+# (execute as user)
+cd ~/source/ctapi-cyberjack.git
+dpkg-buildpackage
+
+# install the package
+# (need root rights)
+cd ~/source
+dpkg -i libctapi-cyberjack2_3.3.6stable-1_i386.deb
+
+# add your user to the group "cyberjack"
+# (need root rights)
+adduser your_user_name cyberjack
+
+# verify that the user is added to the group "cyberjack"
+# (execute as user)
+groups
+
+# to test the chipcard reader configuration
+# you need before
+#   either: login in a new session
+#   or    : execute in the current user session "newgrp cyberjack"
+cyberjack
+
+# if you get on error message like: 
+#   "HAL not running: The name org.freedesktop.Hal was not provided by any .service files"
+# the hal package needs to be installed
+# (need root rights)
+aptitude install hal
+

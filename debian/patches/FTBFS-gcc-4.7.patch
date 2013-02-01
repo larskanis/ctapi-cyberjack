@@ -1,0 +1,16 @@
+From: Frank Neuber <sct@kernelport.com>
+Date: Wed, 11 Apr 2012 16:09:34 +0200
+Subject: [PATCH] Fix Bug#667319 gcc-4.7 support
+
+diff --git a/libcyberjack/checksuite/cm_distri.cpp b/libcyberjack/checksuite/cm_distri.cpp
+index 65d837b..1563561 100644
+--- a/libcyberjack/checksuite/cm_distri.cpp
++++ b/libcyberjack/checksuite/cm_distri.cpp
+@@ -19,6 +19,7 @@
+ #include <stdio.h>
+ #include <errno.h>
+ #include <string.h>
++#include <unistd.h>
+ 
+ 
+ 
